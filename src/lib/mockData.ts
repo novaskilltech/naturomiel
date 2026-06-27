@@ -50,7 +50,7 @@ export const PRODUCTS: Product[] = [
     texture: "Liquide à légèrement crémeuse.",
     usageTips: "Idéal pour réchauffer la gorge en hiver ou pour accompagner des plats gastronomiques audacieux.",
     crystallization: "Moyenne.",
-    imageUrl: "/images/ZAGGOUM.jpeg",
+    imageUrl: "/images/zaggoum_luxury_jar.png",
     variants: [
       { id: "v-zaggoum-500", weight: "500 g", price: 18, stock: 30 },
       { id: "v-zaggoum-1000", weight: "1 kg", price: 35, stock: 20 }
