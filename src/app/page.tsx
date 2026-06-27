@@ -179,26 +179,36 @@ export default function Home() {
 
         {/* Promotion World Cup FIFA 2026 */}
         <section className="py-20 px-4 sm:px-6 lg:px-8 bg-bg-ivory border-t border-gold-champagne/10">
-          <div className="mx-auto max-w-5xl bg-white border border-gold-champagne/20 p-8 sm:p-12 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm">
-            {/* World Cup banner graphics */}
-            <div className="absolute top-0 right-0 h-40 w-40 bg-gold-champagne/5 rounded-full -mr-20 -mt-20 pointer-events-none" />
-            
-            <div className="space-y-4 max-w-lg text-center md:text-left">
-              <span className="inline-block bg-[#006233] text-white text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded">
-                Événement Spécial FIFA 2026
-              </span>
-              <h3 className="font-serif text-2xl sm:text-3xl text-dark-deep font-semibold">
-                Célébrez la Coupe du Monde
-              </h3>
-              <p className="text-xs text-olive-light leading-relaxed">
-                Soutenez l'équipe nationale et profitez de **10% de réduction immédiate** sur tout le site (hors frais de port) à partir de 100 € d'achat avec le code ci-dessous.
-              </p>
+          <div className="mx-auto max-w-5xl bg-white border border-gold-champagne/20 overflow-hidden grid grid-cols-1 md:grid-cols-2 shadow-sm">
+            {/* Image Section */}
+            <div className="relative h-64 md:h-auto min-h-[320px]">
+              <img
+                src="/images/fifa_promo_banner.png"
+                alt="FIFA 2026 Coupe du Monde Maroc Promotion"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-dark-deep/30 to-transparent" />
             </div>
 
-            <div className="flex flex-col items-center gap-3 bg-bg-cream border border-dashed border-gold-champagne p-6 min-w-[200px]">
-              <span className="text-[10px] uppercase tracking-wider text-olive-light font-bold">Votre Code Promo</span>
-              <span className="font-mono text-xl font-bold tracking-widest text-dark-deep">MAROC2026</span>
-              <span className="text-[9px] text-gold-dark font-medium mt-1">Dès 100 € de commande</span>
+            {/* Content Section */}
+            <div className="p-8 sm:p-12 flex flex-col justify-center space-y-6 relative">
+              <div className="space-y-4">
+                <span className="inline-block bg-[#006233] text-white text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded">
+                  Événement Spécial FIFA 2026
+                </span>
+                <h3 className="font-serif text-2xl sm:text-3xl text-dark-deep font-semibold">
+                  Célébrez la Coupe du Monde
+                </h3>
+                <p className="text-xs text-olive-light leading-relaxed">
+                  Soutenez l'équipe nationale et profitez de <strong className="text-dark-deep">10% de réduction immédiate</strong> sur tout le site (hors frais de port) à partir de 100 € d'achat avec le code ci-dessous.
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center gap-3 bg-bg-cream border border-dashed border-gold-champagne p-6">
+                <span className="text-[10px] uppercase tracking-wider text-olive-light font-bold">Votre Code Promo</span>
+                <span className="font-mono text-2xl font-bold tracking-widest text-[#C1272D] bg-white px-4 py-1.5 border border-gold-champagne/30">MAROC2026</span>
+                <span className="text-[9px] text-gold-dark font-medium mt-1">Dès 100 € de commande</span>
+              </div>
             </div>
           </div>
         </section>
