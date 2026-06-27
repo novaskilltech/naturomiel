@@ -1,0 +1,139 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum OrderStatus {
+  INITIATED
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  DISPUTED
+  DELIVERED
+}
+
+enum ProductCategory {
+  HONEY
+  THERAPEUTIC_BLEND
+  HIVE_PRODUCT
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orders    Order[]
+}
+
+model Product {
+  id              String          @id @default(uuid())
+  name            String
+  description     String          @db.Text
+  category        ProductCategory
+  origin          String?
+  taste           String?
+  texture         String?
+  usageTips       String?         @db.Text
+  crystallization String?
+  imageUrl        String          @default("/images/placeholder.jpg")
+  isActive        Boolean         @default(true)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  variants        ProductVariant[]
+  reviews         Review[]
+  orderItems      OrderItem[]
+}
+
+model ProductVariant {
+  id        String      @id @default(uuid())
+  productId String
+  product   Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  weight    String      // e.g. "500g", "1kg", "250g", "20g"
+  price     Float
+  stock     Int         @default(0)
+  sku       String?     @unique
+  orderItems OrderItem[]
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  userId          String?
+  user            User?       @relation(fields: [userId], references: [id])
+  status          OrderStatus @default(INITIATED)
+  totalAmount     Float
+  shippingAddress String      @db.Text
+  phone           String
+  email           String
+  paymentMethod   String      // "STRIPE" | "PAYPAL" | "COD" | "BANK_TRANSFER"
+  paymentId       String?     // External payment provider reference
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id             String         @id @default(uuid())
+  orderId        String
+  order          Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId      String
+  product        Product        @relation(fields: [productId], references: [id])
+  variantId      String
+  variant        ProductVariant @relation(fields: [variantId], references: [id])
+  quantity       Int
+  priceAtPurchase Float
+}
+
+model PromoCode {
+  id              String    @id @default(uuid())
+  code            String    @unique
+  discountPercent Float
+  minAmount       Float     @default(0)
+  isActive        Boolean   @default(true)
+  expiresAt       DateTime?
+  createdAt       DateTime  @default(now())
+}
+
+model BlogPost {
+  id             String   @id @default(uuid())
+  title          String
+  slug           String   @unique
+  content        String   @db.Text
+  imageUrl       String   @default("/images/placeholder-blog.jpg")
+  category       String
+  isPublished    Boolean  @default(false)
+  author         String   @default("NaturoMiel")
+  seoTitle       String?
+  seoDescription String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Review {
+  id           String   @id @default(uuid())
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  customerName String
+  rating       Int
+  comment      String   @db.Text
+  isApproved   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+}
+
+model Setting {
+  id    String @id @default(uuid())
+  key   String @unique
+  value String @db.Text
+}

@@ -1,65 +1,245 @@
-import Image from "next/image";
+"use client";
+
+import React from "react";
+import Link from "next/link";
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import { PRODUCTS } from "@/lib/mockData";
+import { useCart } from "@/context/CartContext";
+import { ChevronRight, ShieldCheck, Heart, Award, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
+import Testimonials from "@/components/Testimonials";
 
 export default function Home() {
+  const { addToCart } = useCart();
+  
+  // Show 3 flagship products on home page
+  const featuredProducts = PRODUCTS.filter(p => 
+    ["miel-jujubier", "miel-zaggoum", "melange-immunite"].includes(p.id)
+  );
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      
+      <main className="flex-grow">
+        {/* Immersive Hero */}
+        <Hero />
+
+        {/* Brand Values / Trust Section */}
+        <section className="bg-bg-ivory py-16 border-y border-gold-champagne/10">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+              <div className="flex flex-col items-center space-y-3">
+                <div className="rounded-full bg-gold-champagne/15 p-4 text-gold-dark">
+                  <Award className="h-6 w-6 stroke-[1.5]" />
+                </div>
+                <h3 className="font-serif text-lg font-medium text-dark-deep">Qualité Sans Compromis</h3>
+                <p className="max-w-xs text-xs text-olive-light leading-relaxed">
+                  Chaque pot est le fruit d’une sélection rigoureuse, analysé en laboratoire pour garantir sa pureté et son origine florale.
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center space-y-3">
+                <div className="rounded-full bg-gold-champagne/15 p-4 text-gold-dark">
+                  <ShieldCheck className="h-6 w-6 stroke-[1.5]" />
+                </div>
+                <h3 className="font-serif text-lg font-medium text-dark-deep">Origine Certifiée</h3>
+                <p className="max-w-xs text-xs text-olive-light leading-relaxed">
+                  Directement récoltés auprès de nos apiculteurs partenaires dans les régions les plus préservées du Maroc (Atlas, Souss).
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center space-y-3">
+                <div className="rounded-full bg-gold-champagne/15 p-4 text-gold-dark">
+                  <Heart className="h-6 w-6 stroke-[1.5]" />
+                </div>
+                <h3 className="font-serif text-lg font-medium text-dark-deep">Apiculture Durable</h3>
+                <p className="max-w-xs text-xs text-olive-light leading-relaxed">
+                  Respect des abeilles et des traditions artisanales pour vous offrir le meilleur de la ruche de manière éco-responsable.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Featured Products */}
+        <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+          <div className="text-center space-y-4 mb-16">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-dark">
+              Sélection d'Exception
+            </span>
+            <h2 className="font-serif text-3xl font-light text-dark-deep sm:text-5xl">
+              Nos Nectars Phares
+            </h2>
+            <div className="h-[1px] w-20 bg-gold-champagne mx-auto mt-4" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {featuredProducts.map((product) => {
+              const defaultVariant = product.variants[0];
+              return (
+                <div 
+                  key={product.id} 
+                  className="flex flex-col bg-white border border-gold-champagne/10 overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                >
+                  <div className="relative h-80 w-full overflow-hidden bg-bg-cream">
+                    <img
+                      src={product.imageUrl}
+                      alt={product.name}
+                      className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                    />
+                    <span className="absolute top-4 left-4 bg-dark-deep/95 text-bg-cream text-[9px] font-semibold uppercase tracking-widest px-3 py-1.5">
+                      {product.category === "HONEY" ? "Miel Rare" : "Therpeutique"}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-1 flex-col p-6 space-y-4 justify-between">
+                    <div>
+                      <div className="flex justify-between items-baseline mb-2">
+                        <h3 className="font-serif text-xl font-medium text-dark-deep">{product.name}</h3>
+                        <span className="text-sm font-semibold text-gold-dark">{defaultVariant.price} €</span>
+                      </div>
+                      <p className="text-xs text-olive-light line-clamp-3 leading-relaxed">
+                        {product.description}
+                      </p>
+                    </div>
+
+                    <div className="pt-4 flex items-center justify-between border-t border-gold-champagne/5">
+                      <Link 
+                        href={`/products#${product.id}`}
+                        className="text-xs font-semibold tracking-wider uppercase text-dark-soft hover:text-gold-dark inline-flex items-center gap-1"
+                      >
+                        En savoir plus <ChevronRight className="h-3 w-3" />
+                      </Link>
+                      
+                      <button
+                        onClick={() => addToCart({
+                          id: defaultVariant.id,
+                          productId: product.id,
+                          variantId: defaultVariant.id,
+                          name: product.name,
+                          weight: defaultVariant.weight,
+                          price: defaultVariant.price,
+                          imageUrl: product.imageUrl
+                        })}
+                        className="bg-dark-deep hover:bg-gold-dark text-white px-4 py-2 text-[10px] font-semibold tracking-widest uppercase transition-colors"
+                      >
+                        Ajouter
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-2 border-b border-dark-deep hover:border-gold-dark text-dark-deep hover:text-gold-dark pb-1 text-xs font-semibold tracking-widest uppercase transition-colors"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              Découvrir toute la gamme <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+        </section>
+
+        {/* Brand Story Section */}
+        <section className="relative bg-dark-deep py-24 overflow-hidden">
+          <div className="absolute inset-0 opacity-15">
+            <img
+              src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?q=80&w=1920&auto=format&fit=crop"
+              alt="Apiculture traditionnelle maroc"
+              className="h-full w-full object-cover"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          </div>
+          <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-8">
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-gold-champagne">
+              L'Art de l'Apiculture
+            </span>
+            <h2 className="font-serif text-3xl font-light text-bg-cream sm:text-5xl leading-tight">
+              Un savoir-faire préservé au cœur du Maroc
+            </h2>
+            <p className="mx-auto max-w-2xl text-xs sm:text-sm text-bg-cream/80 leading-relaxed font-light">
+              Des montagnes du Moyen-Atlas aux régions semi-arides du Souss, les abeilles de NaturoMiel butinent des fleurs sauvages uniques pour produire des nectars d'une pureté exceptionnelle. Nous soutenons des méthodes d'apiculture traditionnelles, respectueuses de l'écosystème local et garantissant une qualité brute, jamais surchauffée, pour préserver toutes ses vertus originelles.
+            </p>
+            <div className="pt-4">
+              <Link
+                href="/blog"
+                className="inline-block bg-gold-champagne hover:bg-gold-dark text-dark-deep hover:text-white px-8 py-3.5 text-xs font-semibold tracking-widest uppercase transition-all duration-300"
+              >
+                Visiter Notre Blog
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Real Customer Testimonials */}
+        <Testimonials />
+
+        {/* Promotion World Cup FIFA 2026 */}
+        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-bg-ivory border-t border-gold-champagne/10">
+          <div className="mx-auto max-w-5xl bg-white border border-gold-champagne/20 p-8 sm:p-12 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm">
+            {/* World Cup banner graphics */}
+            <div className="absolute top-0 right-0 h-40 w-40 bg-gold-champagne/5 rounded-full -mr-20 -mt-20 pointer-events-none" />
+            
+            <div className="space-y-4 max-w-lg text-center md:text-left">
+              <span className="inline-block bg-[#006233] text-white text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded">
+                Événement Spécial FIFA 2026
+              </span>
+              <h3 className="font-serif text-2xl sm:text-3xl text-dark-deep font-semibold">
+                Célébrez la Coupe du Monde
+              </h3>
+              <p className="text-xs text-olive-light leading-relaxed">
+                Soutenez l'équipe nationale et profitez de **10% de réduction immédiate** sur tout le site (hors frais de port) à partir de 100 € d'achat avec le code ci-dessous.
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center gap-3 bg-bg-cream border border-dashed border-gold-champagne p-6 min-w-[200px]">
+              <span className="text-[10px] uppercase tracking-wider text-olive-light font-bold">Votre Code Promo</span>
+              <span className="font-mono text-xl font-bold tracking-widest text-dark-deep">MAROC2026</span>
+              <span className="text-[9px] text-gold-dark font-medium mt-1">Dès 100 € de commande</span>
+            </div>
+          </div>
+        </section>
       </main>
+
+      {/* Footer */}
+      <footer className="bg-dark-deep text-bg-cream/65 py-16 border-t border-gold-champagne/10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-12 text-sm">
+          <div className="space-y-4">
+            <h4 className="font-serif text-lg text-bg-cream tracking-widest font-semibold">NATURO<span className="text-gold-champagne">MIEL</span></h4>
+            <p className="text-xs font-light leading-relaxed">
+              Sélection d'exception de miels rares et produits de la ruche du Maroc. Luxe, bien-être et authenticité au service de votre santé.
+            </p>
+          </div>
+          <div>
+            <h4 className="font-serif text-xs uppercase tracking-widest text-bg-cream font-bold mb-4">Navigation</h4>
+            <ul className="space-y-2.5 text-xs font-light">
+              <li><Link href="/products" className="hover:text-gold-champagne transition-colors">Tous nos Miels</Link></li>
+              <li><Link href="/melanges" className="hover:text-gold-champagne transition-colors">Mélanges Thérapeutiques</Link></li>
+              <li><Link href="/promotions" className="hover:text-gold-champagne transition-colors">Offres Spéciales</Link></li>
+              <li><Link href="/blog" className="hover:text-gold-champagne transition-colors">Le Blog Santé</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-serif text-xs uppercase tracking-widest text-bg-cream font-bold mb-4">Contact & Commandes</h4>
+            <ul className="space-y-2.5 text-xs font-light">
+              <li>WhatsApp : <a href="https://wa.me/212716014148" className="hover:text-gold-champagne transition-colors font-mono">+212 716 01 41 48</a></li>
+              <li>Email : <a href="mailto:naturomiel@gmail.com" className="hover:text-gold-champagne transition-colors font-mono">naturomiel@gmail.com</a></li>
+              <li>Livraison : France, Maroc, Europe</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-serif text-xs uppercase tracking-widest text-bg-cream font-bold mb-4">Mentions légales</h4>
+            <ul className="space-y-2.5 text-xs font-light">
+              <li><Link href="/legal" className="hover:text-gold-champagne transition-colors">Mentions Légales & CGV</Link></li>
+              <li><Link href="/rgpd" className="hover:text-gold-champagne transition-colors">Politique de Confidentialité</Link></li>
+              <li>© {new Date().getFullYear()} NaturoMiel. Tous droits réservés.</li>
+            </ul>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
