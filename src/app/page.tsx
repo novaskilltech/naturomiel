@@ -232,13 +232,13 @@ export default function Home() {
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
               <div className="space-y-2">
                 <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold-dark block">
-                  Engagement & Pureté
+                  Engagement, Science & Nature
                 </span>
                 <h2 className="font-serif text-3xl font-light text-dark-deep sm:text-4xl">
                   Le Mot du Fondateur
                 </h2>
                 <p className="text-xs text-olive-dark font-medium italic">
-                  Conseiller en Apithérapie & Apiculteur Passionné
+                  Apiculteur Amateur & Conseiller en Apithérapie, Phytothérapie & Aromathérapie
                 </p>
               </div>
 
@@ -246,17 +246,17 @@ export default function Home() {
 
               <div className="space-y-4 text-xs sm:text-sm text-dark-soft leading-relaxed font-light">
                 <p>
-                  "Passionné depuis de nombreuses années par le monde fascinant des abeilles, j'ai fondé **NaturoMiel** avec une mission claire : vous faire découvrir la quintessence des terroirs marocains à travers des nectars bruts d'exception. En combinant mon expertise de conseiller en apithérapie et ma passion d'apiculteur amateur, je m'engage à vous proposer des préparations qui préservent toutes les forces de la ruche."
+                  "Passionné depuis de nombreuses années par le monde fascinant des abeilles, j'ai fondé **NaturoMiel** avec une mission claire : vous faire découvrir la quintessence des terroirs marocains à travers des nectars bruts d'exception. En combinant ma passion d'apiculteur amateur et mes compétences de conseiller en **apithérapie**, **phytothérapie** et **aromathérapie**, j'élabore des mélanges thérapeutiques uniques en synergie. Cette approche scientifique et naturelle me permet d'allier la puissance médicinale des plantes et des huiles essentielles à la pureté absolue des produits de la ruche pour concevoir nos remèdes signature."
                 </p>
                 <p>
-                  "Chaque miel que nous vous proposons est le fruit d'une sélection rigoureuse et sans compromis. Je me déplace personnellement dans les régions sauvages et préservées du Maroc — des forêts d'eucalyptus du Moyen-Atlas aux plaines arides du Souss — pour collaborer avec des apiculteurs locaux traditionnels. Nous n'utilisons que des méthodes douces : aucun miel n'est surchauffé pour préserver ses enzymes actives et toutes ses vertus médicinales originelles. Enfin, chaque récolte est systématiquement analysée en laboratoire indépendant afin de certifier son origine, son taux d'humidité optimal et sa pureté totale."
+                  "Chaque ingrédient et chaque miel que nous vous proposons fait l'objet d'une sélection rigoureuse et sans aucun compromis. Je me déplace personnellement dans les régions sauvages et préservées du Maroc — des forêts d'eucalyptus du Moyen-Atlas aux plaines arides du Souss — pour collaborer avec des apiculteurs locaux traditionnels partageant nos valeurs. Nous n'utilisons que des méthodes douces : aucun miel n'est surchauffé pour préserver ses enzymes actives et toutes ses vertus médicinales originelles. Enfin, chaque récolte est systématiquement analysée en laboratoire indépendant afin de certifier son origine botanique, sa pureté totale et son taux d'humidité optimal."
                 </p>
               </div>
 
               <div className="pt-4 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                 <div className="text-center lg:text-left">
                   <h4 className="font-serif text-sm font-bold text-dark-deep">Votre Conseiller NaturoMiel</h4>
-                  <p className="text-[10px] text-olive-light mt-0.5">Expert Apithérapie certifié • Suivi & Traçabilité</p>
+                  <p className="text-[10px] text-olive-light mt-0.5">Apithérapie, Phytothérapie & Aromathérapie • Suivi & Traçabilité</p>
                 </div>
               </div>
             </div>
