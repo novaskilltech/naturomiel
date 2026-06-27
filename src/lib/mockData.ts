@@ -34,7 +34,7 @@ export const PRODUCTS: Product[] = [
     texture: "Onctueuse, dense, très lente à cristalliser.",
     usageTips: "Prendre une cuillère à café le matin à jeun pour booster l'énergie naturelle, ou l'intégrer dans vos boissons chaudes douces.",
     crystallization: "Très lente (reste liquide de nombreux mois).",
-    imageUrl: "/images/JUJUBIER.jpeg",
+    imageUrl: "/images/jujubier_luxury_jar.png",
     variants: [
       { id: "v-jujubier-500", weight: "500 g", price: 20, stock: 25 },
       { id: "v-jujubier-1000", weight: "1 kg", price: 35, stock: 15 }
