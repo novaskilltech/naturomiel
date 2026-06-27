@@ -144,39 +144,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Brand Story Section */}
-        <section className="relative bg-dark-deep py-24 overflow-hidden">
-          <div className="absolute inset-0 opacity-15">
-            <img
-              src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?q=80&w=1920&auto=format&fit=crop"
-              alt="Apiculture traditionnelle maroc"
-              className="h-full w-full object-cover"
-            />
-          </div>
-          <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-8">
-            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-gold-champagne">
-              L'Art de l'Apiculture
-            </span>
-            <h2 className="font-serif text-3xl font-light text-bg-cream sm:text-5xl leading-tight">
-              Un savoir-faire préservé au cœur du Maroc
-            </h2>
-            <p className="mx-auto max-w-2xl text-xs sm:text-sm text-bg-cream/80 leading-relaxed font-light">
-              Des montagnes du Moyen-Atlas aux régions semi-arides du Souss, les abeilles de NaturoMiel butinent des fleurs sauvages uniques pour produire des nectars d'une pureté exceptionnelle. Nous soutenons des méthodes d'apiculture traditionnelles, respectueuses de l'écosystème local et garantissant une qualité brute, jamais surchauffée, pour préserver toutes ses vertus originelles.
-            </p>
-            <div className="pt-4">
-              <Link
-                href="/blog"
-                className="inline-block bg-gold-champagne hover:bg-gold-dark text-dark-deep hover:text-white px-8 py-3.5 text-xs font-semibold tracking-widest uppercase transition-all duration-300"
-              >
-                Visiter Notre Blog
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* Real Customer Testimonials */}
-        <Testimonials />
-
         {/* Promotion World Cup FIFA 2026 */}
         <section className="py-20 px-4 sm:px-6 lg:px-8 bg-bg-ivory border-t border-gold-champagne/10">
           <div className="mx-auto max-w-5xl bg-white border border-gold-champagne/20 overflow-hidden grid grid-cols-1 md:grid-cols-2 shadow-sm">
@@ -212,6 +179,39 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Brand Story Section */}
+        <section className="relative bg-dark-deep py-24 overflow-hidden">
+          <div className="absolute inset-0 opacity-15">
+            <img
+              src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?q=80&w=1920&auto=format&fit=crop"
+              alt="Apiculture traditionnelle maroc"
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-8">
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-gold-champagne">
+              L'Art de l'Apiculture
+            </span>
+            <h2 className="font-serif text-3xl font-light text-bg-cream sm:text-5xl leading-tight">
+              Un savoir-faire préservé au cœur du Maroc
+            </h2>
+            <p className="mx-auto max-w-2xl text-xs sm:text-sm text-bg-cream/80 leading-relaxed font-light">
+              Des montagnes du Moyen-Atlas aux régions semi-arides du Souss, les abeilles de NaturoMiel butinent des fleurs sauvages uniques pour produire des nectars d'une pureté exceptionnelle. Nous soutenons des méthodes d'apiculture traditionnelles, respectueuses de l'écosystème local et garantissant une qualité brute, jamais surchauffée, pour préserver toutes ses vertus originelles.
+            </p>
+            <div className="pt-4">
+              <Link
+                href="/blog"
+                className="inline-block bg-gold-champagne hover:bg-gold-dark text-dark-deep hover:text-white px-8 py-3.5 text-xs font-semibold tracking-widest uppercase transition-all duration-300"
+              >
+                Visiter Notre Blog
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Real Customer Testimonials */}
+        <Testimonials />
       </main>
 
       {/* Footer */}
