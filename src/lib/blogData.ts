@@ -326,5 +326,26 @@ export const BLOG_POSTS: BlogPost[] = [
       ## Le Faux Bourdon : Une Abeille Mâle Indispensable
       Les faux bourdons sont les mâles de la colonie. Plus grands et robustes que les ouvrières, ils ne possèdent pas d'aiguillon et ne récoltent pas de nectar. Leur unique mission est de féconder les jeunes reines vierges lors du vol nuptial, assurant ainsi le brassage génétique indispensable à la résistance de la colonie.
     `
+  },
+  {
+    id: "post-msemmen",
+    title: "Le Petit Déjeuner Marocain Traditionnel : Msemmen, Beurre Beldi et Miel Pur",
+    slug: "petit-dejeuner-marocain-msemmen-miel-atay",
+    category: "recettes",
+    categoryLabel: "Recettes & Dégustation",
+    imageUrl: "/images/msemmen_atay.png",
+    author: "NaturoMiel Gourmand",
+    createdAt: "27 Juin 2026",
+    seoTitle: "Petit Déjeuner Marocain : Msemmen au Miel et Thé Atay | NaturoMiel",
+    seoDescription: "Découvrez l'accord parfait des Msemmens feuilletés chauds avec du beurre de baratte fondu, du miel brut de fleur d'oranger et un bon thé à la menthe.",
+    content: `
+      Le petit déjeuner au Maroc est un rituel sacré de partage, de textures et de saveurs authentiques. Au centre de cette table généreuse trône fièrement le Msemmen, cette crêpe feuilletée de forme carrée, croustillante à l'extérieur et moelleuse à cœur.
+
+      ## L'Accord Parfait : Msemmen Chaud, Beurre de Baratte & Miel
+      Dès la sortie de la poêle en fonte, le Msemmen encore brûlant accueille une noix de beurre de baratte artisanal (beurre beldi) qui fond instantanément dans ses multiples plis feuilletés. Pour parfaire cette expérience gustative, on y fait couler un filet généreux de miel brut de fleur d'oranger ou de miel de forêt de l'Atlas. Le contraste entre le salé discret du beurre et la douceur florale du miel brut crée une harmonie magique en bouche.
+
+      ## Le Berrad d'Atay : Le Compagnon Indispensable
+      Ce festin matinal ne serait pas complet sans le traditionnel thé à la menthe marocain, préparé avec passion dans un berrad (théière en argent sculptée). Versé de très haut pour former une fine mousse ("la couronne"), ce thé chaud et parfumé vient équilibrer la richesse du Msemmen au miel par ses notes fraîches et stimulantes. Une véritable invitation au voyage culinaire !
+    `
   }
 ];
