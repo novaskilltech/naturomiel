@@ -45,7 +45,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "renforcer-immunite-apitherapie-automne",
     category: "apitherapie",
     categoryLabel: "Apithérapie",
-    imageUrl: "/images/IMMUNITE.jpeg",
+    imageUrl: "/images/blog_apitherapie.png",
     author: "Naturopathe Cabinet",
     createdAt: "15 Juin 2026",
     seoTitle: "Renforcer son immunité à l'automne avec l'apithérapie | NaturoMiel",
