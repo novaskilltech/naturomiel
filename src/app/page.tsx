@@ -210,6 +210,60 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Word from the Founder */}
+        <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white border-t border-gold-champagne/10">
+          <div className="mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            
+            {/* Image Column */}
+            <div className="lg:col-span-5 relative flex justify-center">
+              <div className="relative w-full max-w-sm aspect-[4/5] border border-gold-champagne/20 p-3 bg-bg-cream shadow-sm">
+                <img
+                  src="/images/fondateur.png"
+                  alt="Fondateur de NaturoMiel"
+                  className="w-full h-full object-cover filter sepia-[5%] contrast-[1.01]"
+                />
+                <div className="absolute -bottom-4 -right-4 bg-dark-deep text-white px-5 py-3 text-[10px] font-bold uppercase tracking-widest border border-gold-champagne/20">
+                  Apiculteur Amateur & Expert
+                </div>
+              </div>
+            </div>
+
+            {/* Text Column */}
+            <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
+              <div className="space-y-2">
+                <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold-dark block">
+                  Engagement & Pureté
+                </span>
+                <h2 className="font-serif text-3xl font-light text-dark-deep sm:text-4xl">
+                  Le Mot du Fondateur
+                </h2>
+                <p className="text-xs text-olive-dark font-medium italic">
+                  Conseiller en Apithérapie & Apiculteur Passionné
+                </p>
+              </div>
+
+              <div className="h-[1px] w-20 bg-gold-champagne mx-auto lg:mx-0" />
+
+              <div className="space-y-4 text-xs sm:text-sm text-dark-soft leading-relaxed font-light">
+                <p>
+                  "Passionné depuis de nombreuses années par le monde fascinant des abeilles, j'ai fondé **NaturoMiel** avec une mission claire : vous faire découvrir la quintessence des terroirs marocains à travers des nectars bruts d'exception. En combinant mon expertise de conseiller en apithérapie et ma passion d'apiculteur amateur, je m'engage à vous proposer des préparations qui préservent toutes les forces de la ruche."
+                </p>
+                <p>
+                  "Chaque miel que nous vous proposons est le fruit d'une sélection rigoureuse et sans compromis. Je me déplace personnellement dans les régions sauvages et préservées du Maroc — des forêts d'eucalyptus du Moyen-Atlas aux plaines arides du Souss — pour collaborer avec des apiculteurs locaux traditionnels. Nous n'utilisons que des méthodes douces : aucun miel n'est surchauffé pour préserver ses enzymes actives et toutes ses vertus médicinales originelles. Enfin, chaque récolte est systématiquement analysée en laboratoire indépendant afin de certifier son origine, son taux d'humidité optimal et sa pureté totale."
+                </p>
+              </div>
+
+              <div className="pt-4 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                <div className="text-center lg:text-left">
+                  <h4 className="font-serif text-sm font-bold text-dark-deep">Votre Conseiller NaturoMiel</h4>
+                  <p className="text-[10px] text-olive-light mt-0.5">Expert Apithérapie certifié • Suivi & Traçabilité</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
         {/* Real Customer Testimonials */}
         <Testimonials />
       </main>
