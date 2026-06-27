@@ -66,7 +66,7 @@ export const PRODUCTS: Product[] = [
     texture: "Crémeuse et veloutée.",
     usageTips: "S'utilise traditionnellement pour apaiser la gorge, sucrer les infusions ou en application cutanée légère.",
     crystallization: "Rapide à moyenne, texture finement granuleuse agréable.",
-    imageUrl: "/images/THYM.jpeg",
+    imageUrl: "/images/thym_luxury_jar.png",
     variants: [
       { id: "v-thym-500", weight: "500 g", price: 18, stock: 40 },
       { id: "v-thym-1000", weight: "1 kg", price: 35, stock: 25 }
