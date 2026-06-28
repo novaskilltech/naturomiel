@@ -82,7 +82,7 @@ export const PRODUCTS: Product[] = [
     texture: "Liquide et limpide.",
     usageTips: "Délicieux dans une infusion de camomille ou de verveine après le repas pour favoriser le confort digestif.",
     crystallization: "Lente.",
-    imageUrl: "/images/FENOUIL.jpeg",
+    imageUrl: "/images/fenouil_luxury_jar.png",
     variants: [
       { id: "v-fenouil-500", weight: "500 g", price: 13, stock: 50 },
       { id: "v-fenouil-1000", weight: "1 kg", price: 25, stock: 35 }
@@ -98,7 +98,7 @@ export const PRODUCTS: Product[] = [
     texture: "Crémeuse ou liquide dorée.",
     usageTips: "À diluer dans une eau tiède avec un zeste de citron pour un confort respiratoire optimal.",
     crystallization: "Moyenne.",
-    imageUrl: "/images/EUCALYPTUS.jpeg",
+    imageUrl: "/images/eucalyptus_luxury_jar.png",
     variants: [
       { id: "v-eucalyptus-500", weight: "500 g", price: 13, stock: 45 },
       { id: "v-eucalyptus-1000", weight: "1 kg", price: 25, stock: 30 }
@@ -114,7 +114,7 @@ export const PRODUCTS: Product[] = [
     texture: "Épaisse, sirupeuse.",
     usageTips: "Excellent substitut au sucre dans les pâtisseries haut de gamme ou sur des tartines de pain complet au petit déjeuner.",
     crystallization: "Très lente.",
-    imageUrl: "/images/CAROUBIER.jpeg",
+    imageUrl: "/images/caroubier_luxury_jar.png",
     variants: [
       { id: "v-caroubier-500", weight: "500 g", price: 13, stock: 35 },
       { id: "v-caroubier-1000", weight: "1 kg", price: 25, stock: 20 }
@@ -130,7 +130,7 @@ export const PRODUCTS: Product[] = [
     texture: "Liquide ambrée.",
     usageTips: "Idéal pour napper les desserts aux fruits frais ou pour sucrer les yaourts artisanaux.",
     crystallization: "Moyenne.",
-    imageUrl: "/images/RONCES DU DESERT.jpeg",
+    imageUrl: "/images/ronces_luxury_jar.png",
     variants: [
       { id: "v-ronces-500", weight: "500 g", price: 13, stock: 20 },
       { id: "v-ronces-1000", weight: "1 kg", price: 25, stock: 15 }
@@ -146,7 +146,7 @@ export const PRODUCTS: Product[] = [
     texture: "Liquide dorée claire.",
     usageTips: "Le miel polyvalent de toute la famille, parfait pour cuisiner, napper ou infuser.",
     crystallization: "Moyenne à rapide.",
-    imageUrl: "/images/CIRCULATION.jpeg",
+    imageUrl: "/images/campagne_luxury_jar.png",
     variants: [
       { id: "v-campagne-500", weight: "500 g", price: 13, stock: 80 },
       { id: "v-campagne-1000", weight: "1 kg", price: 25, stock: 50 }
@@ -160,7 +160,7 @@ export const PRODUCTS: Product[] = [
     category: "HIVE_PRODUCT",
     origin: "Maroc",
     description: "Notre pollen sec est récolté avec soin par nos apiculteurs partenaires dans des zones préservées de toute pollution. Super-aliment exceptionnel, il constitue une source naturelle remarquable de protéines végétales, de vitamines et de minéraux pour retrouver tonus et vitalité.",
-    imageUrl: "/images/POLLEN SEC.jpeg",
+    imageUrl: "/images/pollen_luxury_jar.png",
     variants: [
       { id: "v-pollen-250", weight: "250 g", price: 12.5, stock: 40 }
     ],
@@ -177,7 +177,7 @@ export const PRODUCTS: Product[] = [
     category: "HIVE_PRODUCT",
     origin: "France",
     description: "La propolis est une résine naturelle protectrice collectée par les abeilles sur les bourgeons des arbres. Cette propolis pure de qualité supérieure est reconnue pour sa richesse exceptionnelle en antioxydants et polyphénols.",
-    imageUrl: "/images/PROPOLIS.jpeg",
+    imageUrl: "/images/propolis_luxury_jar.png",
     variants: [
       { id: "v-propolis-20", weight: "20 g", price: 10, stock: 100 }
     ],
