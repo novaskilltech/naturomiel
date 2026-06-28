@@ -19,17 +19,31 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "NaturoMiel | Miels Rares du Maroc & Apithérapie Premium",
   description: "Découvrez notre sélection exclusive de miels rares du Maroc, mélanges thérapeutiques artisanaux et produits de la ruche de qualité exceptionnelle.",
-  metadataBase: new URL("https://www.naturomiel.fr"),
+  metadataBase: new URL("https://naturomiel.vercel.app"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "NaturoMiel | Miels Rares du Maroc",
-    description: "Miels rares du Maroc, mélanges thérapeutiques et produits de la ruche de qualité exceptionnelle.",
-    url: "https://www.naturomiel.fr",
+    title: "NaturoMiel | Miels Rares du Maroc & Apithérapie Premium",
+    description: "Découvrez notre sélection exclusive de miels rares du Maroc, mélanges thérapeutiques artisanaux et produits de la ruche de qualité exceptionnelle.",
+    url: "https://naturomiel.vercel.app",
     siteName: "NaturoMiel",
     locale: "fr_FR",
     type: "website",
+    images: [
+      {
+        url: "/images/naturomiel_opengraph.png",
+        width: 1200,
+        height: 630,
+        alt: "NaturoMiel - Miels Rares & Apithérapie Premium",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NaturoMiel | Miels Rares du Maroc & Apithérapie Premium",
+    description: "Découvrez notre sélection exclusive de miels rares du Maroc, mélanges thérapeutiques artisanaux et produits de la ruche de qualité exceptionnelle.",
+    images: ["/images/naturomiel_opengraph.png"],
   },
 };
 
