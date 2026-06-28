@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import { PRODUCTS, Product } from "@/lib/mockData";
 import { useCart } from "@/context/CartContext";
-import { Info, HelpCircle } from "lucide-react";
+import { Info, HelpCircle, Sparkles } from "lucide-react";
 
 export default function ProductsPage() {
   const { addToCart } = useCart();
@@ -237,7 +237,7 @@ export default function ProductsPage() {
 
               {selectedProductDetails.benefits && (
                 <div>
-                  <h4 className="font-serif text-sm font-semibold uppercase tracking-wider text-dark-deep mb-2">Bienfaits Reconnu</h4>
+                  <h4 className="font-serif text-sm font-semibold uppercase tracking-wider text-dark-deep mb-2">Bienfaits Reconnus</h4>
                   <ul className="list-disc pl-4 text-xs text-olive-light space-y-1">
                     {selectedProductDetails.benefits.map((b, idx) => (
                       <li key={idx}>{b}</li>
@@ -245,6 +245,26 @@ export default function ProductsPage() {
                   </ul>
                 </div>
               )}
+
+              {selectedProductDetails.homeRemedy && (
+                <div className="bg-white border border-gold-champagne/20 p-4 rounded-sm space-y-2">
+                  <h4 className="font-serif text-xs font-semibold uppercase tracking-wider text-gold-dark flex items-center gap-1.5">
+                    <Sparkles className="h-4 w-4 text-gold-dark" /> Remède Maison
+                  </h4>
+                  <div className="text-xs space-y-1">
+                    <p className="text-dark-deep font-semibold">
+                      <span className="text-olive-dark">Cas pratique :</span> {selectedProductDetails.homeRemedy.case}
+                    </p>
+                    <p className="text-olive-light leading-relaxed">
+                      <span className="text-olive-dark font-semibold">Recette :</span> {selectedProductDetails.homeRemedy.recipe}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="text-[10px] text-olive-light/60 border-t border-gold-champagne/10 pt-4 italic">
+                * Note d'usage : Les remèdes et conseils d'apithérapie partagés ici sont issus de traditions ancestrales. Ils soutiennent le bien-être général mais ne remplacent en aucun cas un avis médical ou un traitement adapté.
+              </div>
             </div>
           </div>
         </div>

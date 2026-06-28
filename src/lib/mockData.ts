@@ -20,6 +20,10 @@ export interface Product {
   composition?: string[];
   benefits?: string[];
   precautions?: string[];
+  homeRemedy?: {
+    case: string;
+    recipe: string;
+  };
 }
 
 export const PRODUCTS: Product[] = [
@@ -29,7 +33,7 @@ export const PRODUCTS: Product[] = [
     name: "Miel de Jujubier (Sidr)",
     category: "HONEY",
     origin: "Maroc",
-    description: "Le Miel de Jujubier du Maroc (Sidr) est l'un des miels les plus prestigieux et recherchés au monde. Issu d'un arbre sauvage des zones arides, il possède des vertus exceptionnelles et un goût d'une richesse incomparable.",
+    description: "Le Miel de Jujubier (Sidr) est un trésor ancestral réputé pour ses propriétés antibactériennes et cicatrisantes exceptionnelles. Issu du jujubier sauvage, dont les vertus purifiantes et fortifiantes sont célébrées en apithérapie, ce nectar rare agit comme un véritable régénérant pour l'organisme et la peau.",
     taste: "Intense, caramélisé, légèrement boisé avec des notes chaudes persistantes.",
     texture: "Onctueuse, dense, très lente à cristalliser.",
     usageTips: "Prendre une cuillère à café le matin à jeun pour booster l'énergie naturelle, ou l'intégrer dans vos boissons chaudes douces.",
@@ -38,14 +42,23 @@ export const PRODUCTS: Product[] = [
     variants: [
       { id: "v-jujubier-500", weight: "500 g", price: 28, stock: 25 },
       { id: "v-jujubier-1000", weight: "1 kg", price: 55, stock: 15 }
-    ]
+    ],
+    benefits: [
+      "Puissant antibactérien et antioxydant naturel",
+      "Favorise la cicatrisation des plaies, brûlures et imperfections cutanées",
+      "Renforce intensément le système immunitaire et combat la fatigue générale"
+    ],
+    homeRemedy: {
+      case: "Acné, cicatrices ou brûlures légères",
+      recipe: "Appliquez une fine couche de miel de Jujubier directement sur la zone concernée préalablement nettoyée. Laissez poser sous une compresse stérile pendant 30 à 60 minutes avant de rincer délicatement à l'eau tiède."
+    }
   },
   {
     id: "miel-zaggoum",
     name: "Miel de Zaggoum (Euphorbe)",
     category: "HONEY",
     origin: "Maroc",
-    description: "Le Miel de Zaggoum (issu de l'Euphorbia resinifera) est un miel unique originaire des montagnes de l'Atlas. C'est un miel rare réputé pour sa saveur singulière et sa sensation de chaleur caractéristique dans la gorge.",
+    description: "Le Miel de Zaggoum (issu de l'Euphorbia resinifera) provient d'une plante grasse des montagnes de l'Atlas aux vertus réchauffantes et stimulantes. Ce miel singulier est traditionnellement utilisé pour ses propriétés anti-inflommatoires, particulièrement bénéfiques pour apaiser les voies respiratoires et soulager les maux de gorge tenaces.",
     taste: "Puissant, chaud, poivré en fin de bouche, très distinctif.",
     texture: "Liquide à légèrement crémeuse.",
     usageTips: "Idéal pour réchauffer la gorge en hiver ou pour accompagner des plats gastronomiques audacieux.",
@@ -54,14 +67,23 @@ export const PRODUCTS: Product[] = [
     variants: [
       { id: "v-zaggoum-500", weight: "500 g", price: 28, stock: 30 },
       { id: "v-zaggoum-1000", weight: "1 kg", price: 55, stock: 20 }
-    ]
+    ],
+    benefits: [
+      "Action anti-inflammatoire et antispasmodique ciblée sur la gorge",
+      "Procure une sensation de chaleur thérapeutique immédiate",
+      "Soutient le tonus cardiovasculaire et stimule la circulation"
+    ],
+    homeRemedy: {
+      case: "Toux sèche ou irritation de la gorge",
+      recipe: "Mélangez une cuillère à café de miel de Zaggoum dans une demi-tasse d'eau tiède avec une pincée de gingembre moulu. Buvez lentement par petites gorgées le soir avant le coucher."
+    }
   },
   {
     id: "miel-thym",
     name: "Miel de Thym",
     category: "HONEY",
     origin: "Maroc (Moyen-Atlas)",
-    description: "Miel de montagne récolté sur les flancs ensoleillés du Moyen-Atlas, notre Miel de Thym sauvage possède des arômes intenses et des vertus antiseptiques et cicatrisantes reconnues depuis l'Antiquité.",
+    description: "Le Miel de Thym sauvage hérite des propriétés antiseptiques majeures et antibactériennes du thym. Réputé en apithérapie clinique comme l'un des meilleurs agents de cicatrisation, il est également un allié précieux pour dégager les voies respiratoires et stimuler le système digestif fatigué.",
     taste: "Très aromatique, herbacé, chaud, avec une pointe d'acidité rafraîchissante.",
     texture: "Crémeuse et veloutée.",
     usageTips: "S'utilise traditionnellement pour apaiser la gorge, sucrer les infusions ou en application cutanée légère.",
@@ -70,14 +92,23 @@ export const PRODUCTS: Product[] = [
     variants: [
       { id: "v-thym-500", weight: "500 g", price: 28, stock: 40 },
       { id: "v-thym-1000", weight: "1 kg", price: 55, stock: 25 }
-    ]
+    ],
+    benefits: [
+      "Propriétés antiseptiques, antivirales et cicatrisantes hors pair",
+      "Soulage rapidement les infections des voies respiratoires (bronches, gorge)",
+      "Aide à réguler la digestion et apaise les spasmes intestinaux"
+    ],
+    homeRemedy: {
+      case: "Brûlure superficielle ou petite coupure",
+      recipe: "Après avoir désinfecté la lésion à l'eau claire, étalez une couche généreuse de miel de Thym et recouvrez d'une gaze stérile. Renouvelez l'application toutes les 24 heures pour accélérer la régénération cutanée."
+    }
   },
   {
     id: "miel-fenouil",
     name: "Miel de Fenouil",
     category: "HONEY",
     origin: "Maroc",
-    description: "Un miel original et d'une grande douceur, apprécié pour ses notes anisées subtiles. Il est traditionnellement recommandé pour accompagner la digestion et apporter un confort après les repas.",
+    description: "Le Miel de Fenouil concentre les vertus carminatives et antispasmodiques des graines de fenouil. Naturellement doux et anisé, il est le partenaire privilégié du confort intestinal, luttant efficacement contre les ballonnements, les spasmes digestifs et favorisant un transit harmonieux après les repas.",
     taste: "Doux, suave, avec de délicates notes d'anis et de réglisse.",
     texture: "Liquide et limpide.",
     usageTips: "Délicieux dans une infusion de camomille ou de verveine après le repas pour favoriser le confort digestif.",
@@ -86,14 +117,23 @@ export const PRODUCTS: Product[] = [
     variants: [
       { id: "v-fenouil-500", weight: "500 g", price: 13, stock: 50 },
       { id: "v-fenouil-1000", weight: "1 kg", price: 25, stock: 35 }
-    ]
+    ],
+    benefits: [
+      "Soulage les ballonnements, gaz et digestions difficiles",
+      "Propriétés antispasmodiques apaisant les coliques et douleurs abdominales",
+      "Favorise traditionnellement la lactation chez les mères allaitantes"
+    ],
+    homeRemedy: {
+      case: "Ballonnements et digestion lente après repas",
+      recipe: "Infusez quelques graines de camomille ou de verveine dans de l'eau chaude. Ajoutez une cuillère à café de miel de Fenouil une fois l'infusion tiédie et consommez après le repas."
+    }
   },
   {
     id: "miel-eucalyptus",
     name: "Miel d'Eucalyptus",
     category: "HONEY",
     origin: "Maroc",
-    description: "Récolté dans les grandes forêts d'eucalyptus, ce miel offre une fraîcheur immédiate en bouche et un parfum boisé caractéristique. Il est parfait pour accompagner les périodes de fraîcheur hivernale.",
+    description: "Le Miel d'Eucalyptus est un merveilleux expectorant naturel qui puise ses vertus dans les feuilles d'eucalyptus, riches en eucalyptol. Il est idéalement recommandé pour purifier les voies respiratoires, calmer les accès de toux grasse et soutenir l'organisme face aux agressions climatiques hivernales.",
     taste: "Boisé, légèrement mentholé, frais et persistant.",
     texture: "Crémeuse ou liquide dorée.",
     usageTips: "À diluer dans une eau tiède avec un zeste de citron pour un confort respiratoire optimal.",
@@ -102,14 +142,23 @@ export const PRODUCTS: Product[] = [
     variants: [
       { id: "v-eucalyptus-500", weight: "500 g", price: 13, stock: 45 },
       { id: "v-eucalyptus-1000", weight: "1 kg", price: 25, stock: 30 }
-    ]
+    ],
+    benefits: [
+      "Expectorant et antiseptique des voies respiratoires",
+      "Calme la toux grasse et aide à fluidifier les sécrétions bronchiques",
+      "Aide à lutter contre les états fébriles et les refroidissements"
+    ],
+    homeRemedy: {
+      case: "Encombrement bronchique et nez bouché",
+      recipe: "Dans un bol d'eau frémissante, ajoutez une cuillère à soupe de miel d'Eucalyptus. Inhalez les vapeurs sous une serviette pendant 10 minutes pour dégager instantanément les sinus."
+    }
   },
   {
     id: "miel-caroubier",
     name: "Miel de Caroubier",
     category: "HONEY",
     origin: "Maroc",
-    description: "Issu des fleurs du caroubier, ce miel sombre et épais dévoile des arômes uniques de chocolat et de caramel. Une véritable gourmandise naturelle réputée pour ses vertus apaisantes digestives.",
+    description: "Le Miel de Caroubier est reconnu pour ses remarquables vertus régulatrices sur l'appareil digestif. Issu des fleurs du caroubier, riche en tanins et fibres douces, il aide à apaiser les muqueuses irritées de l'estomac, à réduire le reflux acide et à réguler le transit intestinal.",
     taste: "Intense, chaud, notes prononcées de caramel cuit et de cacao.",
     texture: "Épaisse, sirupeuse.",
     usageTips: "Excellent substitut au sucre dans les pâtisseries haut de gamme ou sur des tartines de pain complet au petit déjeuner.",
@@ -118,14 +167,23 @@ export const PRODUCTS: Product[] = [
     variants: [
       { id: "v-caroubier-500", weight: "500 g", price: 13, stock: 35 },
       { id: "v-caroubier-1000", weight: "1 kg", price: 25, stock: 20 }
-    ]
+    ],
+    benefits: [
+      "Protège et tapisse la muqueuse gastrique contre l'acidité",
+      "Régulateur naturel du transit (efficace contre la diarrhée et la constipation)",
+      "Riche en oligo-éléments et minéraux essentiels"
+    ],
+    homeRemedy: {
+      case: "Reflux gastrique ou aigreurs d'estomac",
+      recipe: "Prenez une cuillère à café de miel de Caroubier pur environ 15 à 20 minutes avant chaque repas principal pour protéger les parois de l'estomac."
+    }
   },
   {
     id: "miel-ronces",
     name: "Miel de Ronces du Désert",
     category: "HONEY",
     origin: "Maroc (Régions pré-désertiques)",
-    description: "Un miel rare et sauvage récolté sur les ronces poussant dans les vallées arides bordant le désert marocain. Un nectar sauvage d'une grande richesse minérale.",
+    description: "Le Miel de Ronces du Désert possède des vertus astringentes et toniques héritées de la ronce sauvage. Particulièrement riche en fer et minéraux, il est conseillé pour fortifier les organismes fatigués, calmer les maux de bouche (aphtes, gencives) et apaiser les maux de gorge.",
     taste: "Sauvage, fruité, légèrement boisé avec une finale persistante.",
     texture: "Liquide ambrée.",
     usageTips: "Idéal pour napper les desserts aux fruits frais ou pour sucrer les yaourts artisanaux.",
@@ -134,14 +192,23 @@ export const PRODUCTS: Product[] = [
     variants: [
       { id: "v-ronces-500", weight: "500 g", price: 13, stock: 20 },
       { id: "v-ronces-1000", weight: "1 kg", price: 25, stock: 15 }
-    ]
+    ],
+    benefits: [
+      "Propriétés astringentes et cicatrisantes pour la sphère buccale",
+      "Tonique général et revitalisant riche en minéraux (fer, magnésium)",
+      "Aide à calmer les inflammations de la gorge et les enrouements"
+    ],
+    homeRemedy: {
+      case: "Aphtes ou gencives irritées",
+      recipe: "Appliquez une noisette de miel de Ronces du Désert directement sur l'aphte ou la zone irritée à l'aide d'un coton-tige. Laissez agir sans rincer. Renouvelez 3 fois par jour."
+    }
   },
   {
     id: "miel-campagne",
     name: "Miel de Campagne",
     category: "HONEY",
     origin: "Maroc (Plaines fleuries)",
-    description: "Une superbe composition florale printanière regroupant le nectar d'eucalyptus, de chardon-Marie, de pin, de trèfle et de multiples fleurs sauvages. Équilibré et polyvalent.",
+    description: "Le Miel de Campagne est une synergie polyflorale printanière regroupant les forces de multiples plantes sauvages. Ce miel doux et équilibré est un excellent fortifiant quotidien pour toute la famille, réputé pour ses vertus calmantes douces qui favorisent la détente et le repos.",
     taste: "Floral, doux, harmonieux et riche en nuances.",
     texture: "Liquide dorée claire.",
     usageTips: "Le miel polyvalent de toute la famille, parfait pour cuisiner, napper ou infuser.",
@@ -150,14 +217,23 @@ export const PRODUCTS: Product[] = [
     variants: [
       { id: "v-campagne-500", weight: "500 g", price: 13, stock: 80 },
       { id: "v-campagne-1000", weight: "1 kg", price: 25, stock: 50 }
-    ]
+    ],
+    benefits: [
+      "Fortifiant naturel polyvalent adapté aux enfants et adultes",
+      "Vertus apaisantes douces favorisant la détente nerveuse",
+      "Riche en antioxydants variés issus de fleurs diverses"
+    ],
+    homeRemedy: {
+      case: "Difficultés d'endormissement ou stress passager",
+      recipe: "Diluez une cuillère à café de miel de Campagne dans une tasse de lait végétal tiède (ou d'infusion de tilleul) 30 minutes avant de vous coucher pour un sommeil serein."
+    }
   },
   {
     id: "miel-acacia-gommier",
     name: "Miel d'Acacia Gommier du Sahara",
     category: "HONEY",
     origin: "Maroc (Sahara)",
-    description: "Le Miel d'Acacia Gommier (Talha) est un nectar rare et précieux récolté dans les zones arides du Sahara marocain. D'une couleur sombre presque noire, il possède une saveur robuste, boisée et des vertus médicinales exceptionnelles.",
+    description: "Le Miel d'Acacia Gommier du Sahara (Talha) est un élixir rare aux propriétés anti-inflommatoires et dépuratives exceptionnelles. Fortement estimé dans les traditions nomades pour soutenir la vitalité des voies respiratoires et hépatiques, son faible indice glycémique en fait également un choix de prédilection.",
     taste: "Robuste, boisé, avec des arômes profonds de réglisse et de caramel brun.",
     texture: "Liquide, très sombre, cristallisation lente.",
     usageTips: "Prendre une cuillère à café pure le matin pour soutenir la vitalité globale ou apaiser les voies respiratoires.",
@@ -166,7 +242,16 @@ export const PRODUCTS: Product[] = [
     variants: [
       { id: "v-acacia-gommier-500", weight: "500 g", price: 28, stock: 8 },
       { id: "v-acacia-gommier-1000", weight: "1 kg", price: 55, stock: 4 }
-    ]
+    ],
+    benefits: [
+      "Indice glycémique bas, adapté à une consommation modérée",
+      "Action anti-inflommatoire et apaisante pour les poumons",
+      "Soutient les fonctions dépuratives du foie et facilite la digestion"
+    ],
+    homeRemedy: {
+      case: "Toux sèche persistante et irritante",
+      recipe: "Mélangez une cuillère à café de miel d'Acacia Gommier avec le jus d'un demi-citron jaune pressé dans de l'eau tiède. Buvez le matin à jeun pour apaiser la gorge."
+    }
   },
 
   // PRODUITS DE LA RUCHE
