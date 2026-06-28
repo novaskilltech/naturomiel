@@ -152,6 +152,22 @@ export const PRODUCTS: Product[] = [
       { id: "v-campagne-1000", weight: "1 kg", price: 25, stock: 50 }
     ]
   },
+  {
+    id: "miel-acacia-gommier",
+    name: "Miel d'Acacia Gommier du Sahara",
+    category: "HONEY",
+    origin: "Maroc (Sahara)",
+    description: "Le Miel d'Acacia Gommier (Talha) est un nectar rare et précieux récolté dans les zones arides du Sahara marocain. D'une couleur sombre presque noire, il possède une saveur robuste, boisée et des vertus médicinales exceptionnelles.",
+    taste: "Robuste, boisé, avec des arômes profonds de réglisse et de caramel brun.",
+    texture: "Liquide, très sombre, cristallisation lente.",
+    usageTips: "Prendre une cuillère à café pure le matin pour soutenir la vitalité globale ou apaiser les voies respiratoires.",
+    crystallization: "Très lente.",
+    imageUrl: "/images/acacia_sahara_luxury_jar.png",
+    variants: [
+      { id: "v-acacia-gommier-500", weight: "500 g", price: 28, stock: 8 },
+      { id: "v-acacia-gommier-1000", weight: "1 kg", price: 55, stock: 4 }
+    ]
+  },
 
   // PRODUITS DE LA RUCHE
   {
