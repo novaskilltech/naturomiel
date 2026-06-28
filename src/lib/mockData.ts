@@ -36,8 +36,8 @@ export const PRODUCTS: Product[] = [
     crystallization: "Très lente (reste liquide de nombreux mois).",
     imageUrl: "/images/jujubier_luxury_jar.png",
     variants: [
-      { id: "v-jujubier-500", weight: "500 g", price: 20, stock: 25 },
-      { id: "v-jujubier-1000", weight: "1 kg", price: 35, stock: 15 }
+      { id: "v-jujubier-500", weight: "500 g", price: 28, stock: 25 },
+      { id: "v-jujubier-1000", weight: "1 kg", price: 55, stock: 15 }
     ]
   },
   {
@@ -52,8 +52,8 @@ export const PRODUCTS: Product[] = [
     crystallization: "Moyenne.",
     imageUrl: "/images/zaggoum_luxury_jar.png",
     variants: [
-      { id: "v-zaggoum-500", weight: "500 g", price: 18, stock: 30 },
-      { id: "v-zaggoum-1000", weight: "1 kg", price: 35, stock: 20 }
+      { id: "v-zaggoum-500", weight: "500 g", price: 28, stock: 30 },
+      { id: "v-zaggoum-1000", weight: "1 kg", price: 55, stock: 20 }
     ]
   },
   {
@@ -68,8 +68,8 @@ export const PRODUCTS: Product[] = [
     crystallization: "Rapide à moyenne, texture finement granuleuse agréable.",
     imageUrl: "/images/thym_luxury_jar.png",
     variants: [
-      { id: "v-thym-500", weight: "500 g", price: 18, stock: 40 },
-      { id: "v-thym-1000", weight: "1 kg", price: 35, stock: 25 }
+      { id: "v-thym-500", weight: "500 g", price: 28, stock: 40 },
+      { id: "v-thym-1000", weight: "1 kg", price: 55, stock: 25 }
     ]
   },
   {
