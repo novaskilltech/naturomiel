@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { Star, MessageSquare } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Star, MessageSquare, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface Testimonial {
@@ -51,9 +51,46 @@ const REVIEWS: Testimonial[] = [
 ];
 
 export default function Testimonials() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(3);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setItemsPerPage(1);
+      } else if (window.innerWidth < 1024) {
+        setItemsPerPage(2);
+      } else {
+        setItemsPerPage(3);
+      }
+    };
+    
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Safe clamping of index if screen size changes
+  useEffect(() => {
+    const maxIdx = Math.max(0, REVIEWS.length - itemsPerPage);
+    if (currentIndex > maxIdx) {
+      setCurrentIndex(maxIdx);
+    }
+  }, [itemsPerPage, currentIndex]);
+
+  const maxIndex = Math.max(0, REVIEWS.length - itemsPerPage);
+
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
+  };
+
   return (
-    <section className="py-24 bg-bg-cream border-t border-gold-champagne/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-24 bg-bg-cream border-t border-gold-champagne/10 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         
         {/* Section Header */}
         <div className="text-center space-y-4 mb-16">
@@ -69,40 +106,79 @@ export default function Testimonials() {
           <div className="h-[1px] w-20 bg-gold-champagne mx-auto mt-4" />
         </div>
 
-        {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {REVIEWS.map((review, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="bg-white border border-gold-champagne/10 p-6 sm:p-8 flex flex-col justify-between hover:shadow-md transition-shadow duration-300 relative"
+        {/* Carousel Window */}
+        <div className="relative px-2 sm:px-10">
+          <div className="overflow-hidden">
+            <motion.div 
+              className="flex"
+              animate={{ x: `-${currentIndex * (100 / itemsPerPage)}%` }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
-              <MessageSquare className="absolute top-6 right-6 h-8 w-8 text-gold-champagne/10 stroke-[1.5]" />
-              
-              <div className="space-y-4">
-                {/* Gold Stars */}
-                <div className="flex gap-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-3.5 w-3.5 fill-gold-dark text-gold-dark" />
-                  ))}
-                </div>
+              {REVIEWS.map((review, idx) => (
+                <div 
+                  key={idx} 
+                  className="px-4 flex-shrink-0"
+                  style={{ width: `${100 / itemsPerPage}%` }}
+                >
+                  <div className="bg-white border border-gold-champagne/10 p-6 sm:p-8 flex flex-col justify-between hover:shadow-md transition-shadow duration-300 relative h-full min-h-[220px]">
+                    <MessageSquare className="absolute top-6 right-6 h-8 w-8 text-gold-champagne/10 stroke-[1.5]" />
+                    
+                    <div className="space-y-4">
+                      {/* Gold Stars */}
+                      <div className="flex gap-0.5">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className="h-3.5 w-3.5 fill-gold-dark text-gold-dark" />
+                        ))}
+                      </div>
 
-                <p className="text-xs sm:text-sm text-dark-soft italic font-light leading-relaxed">
-                  "{review.text}"
-                </p>
-              </div>
+                      <p className="text-xs sm:text-sm text-dark-soft italic font-light leading-relaxed">
+                        "{review.text}"
+                      </p>
+                    </div>
 
-              <div className="pt-6 border-t border-gold-champagne/5 mt-6 flex justify-between items-end">
-                <div>
-                  <h4 className="font-serif text-sm font-semibold text-dark-deep">{review.name}</h4>
-                  <p className="text-[10px] text-olive-light mt-0.5">{review.role}</p>
+                    <div className="pt-6 border-t border-gold-champagne/5 mt-6 flex justify-between items-end">
+                      <div>
+                        <h4 className="font-serif text-sm font-semibold text-dark-deep">{review.name}</h4>
+                        <p className="text-[10px] text-olive-light mt-0.5">{review.role}</p>
+                      </div>
+                      <span className="text-[9px] text-olive-light font-mono">{review.date.replace("Visité en ", "")}</span>
+                    </div>
+                  </div>
                 </div>
-                <span className="text-[9px] text-olive-light font-mono">{review.date.replace("Visité en ", "")}</span>
-              </div>
+              ))}
             </motion.div>
+          </div>
+
+          {/* Navigation controls */}
+          <button
+            onClick={prevSlide}
+            className="absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-dark-deep hover:text-white text-dark-deep border border-gold-champagne/30 p-2 sm:p-3 transition-colors shadow-sm focus:outline-none z-10 hidden sm:block"
+            aria-label="Avis précédent"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            onClick={nextSlide}
+            className="absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-dark-deep hover:text-white text-dark-deep border border-gold-champagne/30 p-2 sm:p-3 transition-colors shadow-sm focus:outline-none z-10 hidden sm:block"
+            aria-label="Avis suivant"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* Dots indicators */}
+        <div className="flex justify-center gap-2 mt-8">
+          {[...Array(maxIndex + 1)].map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentIndex(idx)}
+              className={`h-2.5 transition-all rounded-full ${
+                currentIndex === idx 
+                  ? "w-8 bg-gold-dark" 
+                  : "w-2.5 bg-gold-champagne/30 hover:bg-gold-champagne"
+              }`}
+              aria-label={`Aller à la diapositive ${idx + 1}`}
+            />
           ))}
         </div>
 
