@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Star, MessageSquare, ChevronLeft, ChevronRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 
 interface Testimonial {
   name: string;
@@ -49,6 +49,82 @@ const REVIEWS: Testimonial[] = [
     date: "Visité en mars 2023"
   }
 ];
+
+function TestimonialCard({ review }: { review: Testimonial }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  // Map absolute mouse delta offset to smooth rotations
+  const rotateX = useTransform(y, [-150, 150], [10, -10]);
+  const rotateY = useTransform(x, [-150, 150], [-10, 10]);
+
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const el = event.currentTarget;
+    const rect = el.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = event.clientX - rect.left - width / 2;
+    const mouseY = event.clientY - rect.top - height / 2;
+    x.set(mouseX);
+    y.set(mouseY);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+        perspective: 1000
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      whileHover={{
+        scale: 1.025,
+        boxShadow: "0 25px 50px -12px rgba(184, 134, 11, 0.2)"
+      }}
+      transition={{ type: "spring", stiffness: 350, damping: 22 }}
+      className="bg-white border border-gold-champagne/15 p-6 sm:p-8 flex flex-col justify-between hover:border-gold-dark/40 transition-colors duration-300 relative h-full min-h-[240px] will-change-transform cursor-pointer select-none"
+    >
+      {/* Background layer effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white via-white to-gold-champagne/5 pointer-events-none" />
+
+      <MessageSquare 
+        className="absolute top-6 right-6 h-8 w-8 text-gold-champagne/15 stroke-[1.5] pointer-events-none transition-transform duration-300" 
+        style={{ transform: "translateZ(30px)" }} 
+      />
+      
+      <div className="space-y-4 relative z-10" style={{ transform: "translateZ(45px)" }}>
+        {/* Gold Stars */}
+        <div className="flex gap-0.5" style={{ transform: "translateZ(20px)" }}>
+          {[...Array(5)].map((_, i) => (
+            <Star key={i} className="h-3.5 w-3.5 fill-gold-dark text-gold-dark" />
+          ))}
+        </div>
+
+        <p className="text-xs sm:text-sm text-dark-soft italic font-light leading-relaxed">
+          "{review.text}"
+        </p>
+      </div>
+
+      <div 
+        className="pt-6 border-t border-gold-champagne/5 mt-6 flex justify-between items-end relative z-10" 
+        style={{ transform: "translateZ(30px)" }}
+      >
+        <div>
+          <h4 className="font-serif text-sm font-semibold text-dark-deep">{review.name}</h4>
+          <p className="text-[10px] text-olive-light mt-0.5">{review.role}</p>
+        </div>
+        <span className="text-[9px] text-olive-light font-mono">{review.date.replace("Visité en ", "")}</span>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function Testimonials() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -108,7 +184,7 @@ export default function Testimonials() {
 
         {/* Carousel Window */}
         <div className="relative px-2 sm:px-10">
-          <div className="overflow-hidden">
+          <div className="overflow-hidden py-4"> {/* Added padding vertical for 3D scale and lift bounds */}
             <motion.div 
               className="flex"
               animate={{ x: `-${currentIndex * (100 / itemsPerPage)}%` }}
@@ -120,30 +196,7 @@ export default function Testimonials() {
                   className="px-4 flex-shrink-0"
                   style={{ width: `${100 / itemsPerPage}%` }}
                 >
-                  <div className="bg-white border border-gold-champagne/10 p-6 sm:p-8 flex flex-col justify-between hover:shadow-md transition-shadow duration-300 relative h-full min-h-[220px]">
-                    <MessageSquare className="absolute top-6 right-6 h-8 w-8 text-gold-champagne/10 stroke-[1.5]" />
-                    
-                    <div className="space-y-4">
-                      {/* Gold Stars */}
-                      <div className="flex gap-0.5">
-                        {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="h-3.5 w-3.5 fill-gold-dark text-gold-dark" />
-                        ))}
-                      </div>
-
-                      <p className="text-xs sm:text-sm text-dark-soft italic font-light leading-relaxed">
-                        "{review.text}"
-                      </p>
-                    </div>
-
-                    <div className="pt-6 border-t border-gold-champagne/5 mt-6 flex justify-between items-end">
-                      <div>
-                        <h4 className="font-serif text-sm font-semibold text-dark-deep">{review.name}</h4>
-                        <p className="text-[10px] text-olive-light mt-0.5">{review.role}</p>
-                      </div>
-                      <span className="text-[9px] text-olive-light font-mono">{review.date.replace("Visité en ", "")}</span>
-                    </div>
-                  </div>
+                  <TestimonialCard review={review} />
                 </div>
               ))}
             </motion.div>
