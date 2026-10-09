@@ -1,0 +1,17 @@
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const assert = require('assert');
+const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
+const productIds = ['romarin','thym','thym-rose','eucalyptus','chene','citronnier','lavande','lavande-papillon','tilleul','garrigue','coriandre','royal','pollen'];
+for (const id of productIds) assert(html.includes('data-id="'+id+'"'), 'Produit absent : '+id);
+assert(html.includes('212716014148'), 'Destinataire WhatsApp manquant');
+assert(html.includes('BASE_PACK = 50'), 'Tarif de base manquant');
+assert(html.includes('THYME_EXTRA = 5'), 'Supplément thym manquant');
+assert(html.includes('ROYAL_EXTRA = 10'), 'Supplément gelée royale manquant');
+assert(html.includes('ROYAL_SINGLE_PRICE = 25'), 'Prix individuel gelée royale manquant');
+assert(html.includes('Pollen de montagne'), 'Pollen manquant');
+assert(html.includes('honey5'), 'Cinquième choix manquant');
+assert(html.includes('Logo historique NATUROMIEL'), 'Logo historique manquant');
+assert(html.includes('const embeddedImages'), 'Visuels autonomes manquants');
+console.log('PASS : 13 références, 5 choix, prix 50 + 5 + 10, unité 25 €, WhatsApp, logo et images.');
