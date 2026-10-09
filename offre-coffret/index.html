@@ -278,7 +278,7 @@
         <div class="form-divider"></div>
         <div class="form-section-heading"><div class="form-step-num">03</div><div><h3>Vérifiez puis envoyez</h3><p>Aucun paiement n'est effectué ici.</p></div></div>
         <div class="summary-box" aria-live="polite"><div><span>Votre précommande</span><b id="summaryQty">1 coffret</b></div><div><span>Sélection du coffret</span><b id="summaryHoney">0/5 pots choisis</b></div><div><span>Gelée royale individuelle</span><b id="summaryPollen">Aucun pot</b></div><div class="summary-total"><span>Total indicatif</span><strong id="totalPrice">50 €</strong></div></div>
-        <label class="consent"><input type="checkbox" name="confirmRoute" id="confirmRoute" required><span>J'ai compris que la livraison à domicile est proposée <strong>uniquement si mon adresse se trouve sur l'itinéraire</strong>. La disponibilité et le créneau seront confirmés par WhatsApp.</span></label>
+        <label class="consent"><input type="checkbox" name="confirmRoute" id="confirmRoute" required><span>J'ai compris que la livraison à domicile est proposée <strong>uniquement si l’adresse du destinataire se trouve sur l’itinéraire</strong>. La disponibilité et le créneau seront confirmés par WhatsApp.</span></label>
         <label class="consent"><input type="checkbox" name="confirmWhatsApp" id="confirmWhatsApp" required><span>Je souhaite transmettre les coordonnées saisies ci-dessus via WhatsApp pour traiter ma demande. <strong>Aucune donnée n'est enregistrée par cette page.</strong></span></label>
         <p class="form-error" id="formError" role="alert" hidden></p>
         <button class="btn btn-whatsapp btn-submit" type="submit" id="submitOrder"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.8a8.6 8.6 0 0 1-12.8 7.5L3 20.5l1.25-4.55a8.6 8.6 0 1 1 16.25-4.15Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.7 8.2c-.5.2-1 1-1 1.5s.8 2 1.8 3.1c1.2 1.4 3 2.4 4.6 2.7.8.1 1.9-.7 2.1-1.3.1-.3.1-.6-.1-.7-.5-.3-1.5-.8-1.8-.8-.3 0-.5.4-1 .9-.2.3-.3.3-.6.2-1.2-.5-2.2-1.4-2.8-2.4-.2-.3.1-.5.4-.8.2-.2.2-.5.1-.8l-.7-1.5c-.1-.2-.5-.2-1-.1Z" fill="currentColor"/></svg> Envoyer ma demande sur WhatsApp <span aria-hidden="true">↗</span></button>
@@ -396,13 +396,15 @@ form.addEventListener('submit',e=>{
     '🍯 *NATUROMIEL — DEMANDE DE PRÉCOMMANDE*','',
     ...(n?[`📦 *${n} coffret${n>1?'s':''} de 5 pots × ${money(onePackPrice())} = ${money(n*onePackPrice())}*`,'*Composition choisie par coffret :*',...chosenNames.map((name,i)=>`  ${i+1}. ${name} (${getItem(name).grams} g)`),...(conditions.length?[`Tarification : ${conditions.join(' ; ')}`]:['Tarification : coffret standard 50 €']),'']:[]),
     ...(solo?[`🍯 *Achat individuel : ${solo} × miel à la gelée royale 450 g × 25 € = ${money(solo*ROYAL_SINGLE_PRICE)}*`,'']:[]),
-    '📍 *ACHETEUR*',
-    ...(giftToggle.checked?['🎁 *COMMANDE POUR UN TIERS*',`Destinataire : ${val('recipientName')}`,`Téléphone du destinataire : ${val('recipientPhone')}`]:['Livraison : pour moi-même']),
+    '👤 *PERSONNE QUI COMMANDE*',
     `Nom : ${val('firstName')} ${val('lastName')}`,
     `WhatsApp : ${val('customerPhone')}`,
     ...(email?[`E-mail : ${email}`]:[]),
-    `Adresse : ${val('address')}`,
-    `Code postal / ville : ${val('postal')} ${val('city')}`,
+    '',
+    '🚚 *DESTINATION DE LA LIVRAISON*',
+    ...(giftToggle.checked?['🎁 Livraison pour une autre personne',`Destinataire : ${val('recipientName')}`,`Téléphone du destinataire : ${val('recipientPhone')}`]:['Destinataire : la personne qui commande']),
+    `Adresse de livraison : ${val('address')}`,
+    `Code postal / ville de livraison : ${val('postal')} ${val('city')}`,
     ...(val('routeStop')?[`Étape A63/A10 la plus proche : ${val('routeStop')}`]:[]),
     ...(val('notes')?[`Informations utiles : ${val('notes')}`]:[]),'',
     `💶 *TOTAL INDICATIF : ${money(total())}* (livraison selon validation du trajet)`,
