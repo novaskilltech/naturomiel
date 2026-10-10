@@ -13,6 +13,8 @@ enum Role {
 
 enum OrderStatus {
   INITIATED
+  PREORDER_PENDING
+  PREORDER_CONFIRMED
   PENDING
   PAID
   FAILED
@@ -61,7 +63,7 @@ model ProductVariant {
   id        String      @id @default(uuid())
   productId String
   product   Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
-  weight    String      // e.g. "500g", "1kg", "250g", "20g"
+  weight    String      // e.g. "450g", "500g", "1kg", "250g", "20g"
   price     Float
   stock     Int         @default(0)
   sku       String?     @unique
@@ -69,30 +71,42 @@ model ProductVariant {
 }
 
 model Order {
-  id              String      @id @default(uuid())
-  userId          String?
-  user            User?       @relation(fields: [userId], references: [id])
-  status          OrderStatus @default(INITIATED)
-  totalAmount     Float
-  shippingAddress String      @db.Text
-  phone           String
-  email           String
-  paymentMethod   String      // "STRIPE" | "PAYPAL" | "COD" | "BANK_TRANSFER"
-  paymentId       String?     // External payment provider reference
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  items           OrderItem[]
+  id                 String      @id @default(uuid())
+  orderNumber        String?     @unique // e.g. "PRE-2026-0001"
+  userId             String?
+  user               User?       @relation(fields: [userId], references: [id])
+  customerName       String?
+  phone              String
+  email              String?
+  status             OrderStatus @default(PREORDER_PENDING)
+  totalAmount        Float
+  shippingAddress    String      @db.Text
+  postalCode         String?
+  city               String?
+  highwayStep        String?     // e.g. "Île-de-France (A10)", "Bordeaux (A63)"
+  recipientType      String?     // "la personne qui commande" ou autre
+  absenceWindow      String?     // e.g. "absent du 14/10 au 23/10"
+  deliveryNotes      String?     @db.Text // Infos utiles, livraison différée
+  rawWhatsAppText    String?     @db.Text // Texte WhatsApp d'origine
+  paymentMethod      String      // "STRIPE" | "PAYPAL" | "COD" | "BANK_TRANSFER" | "ESPECES" | "PREORDER_UNPAID"
+  paymentId          String?     // External payment provider reference
+  compositionDetails String?     @db.Text // Détail JSON/Texte des coffrets et pots
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  items              OrderItem[]
 }
 
 model OrderItem {
-  id             String         @id @default(uuid())
-  orderId        String
-  order          Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId      String
-  product        Product        @relation(fields: [productId], references: [id])
-  variantId      String
-  variant        ProductVariant @relation(fields: [variantId], references: [id])
-  quantity       Int
+  id              String          @id @default(uuid())
+  orderId         String
+  order           Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId       String?
+  product         Product?        @relation(fields: [productId], references: [id])
+  variantId       String?
+  variant         ProductVariant? @relation(fields: [variantId], references: [id])
+  productName     String          // Pour conserver le libellé exact
+  variantWeight   String?
+  quantity        Int             @default(1)
   priceAtPurchase Float
 }
 

@@ -2,24 +2,57 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { PRODUCTS as initialProducts, Product } from "@/lib/mockData";
 import { BLOG_POSTS as initialBlogPosts, BlogPost } from "@/lib/blogData";
-import { Package, ShoppingCart, Tag, BookOpen, Settings, Check, Save, Plus, Trash2 } from "lucide-react";
+import { Package, ShoppingCart, Tag, BookOpen, Settings, Check, Save, Plus, Trash2, MessageSquarePlus, Box, Truck, Edit3, X, RefreshCw, Printer, FileText, LogOut } from "lucide-react";
+import WhatsAppOrderModal from "@/components/WhatsAppOrderModal";
+import { OFFRE_PRODUCTS, TOURNEE_AXE_STEPS } from "@/lib/offreCatalog";
+import { printIndividualOrder, printGlobalPreparationSheet } from "@/lib/printOrders";
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<"products" | "orders" | "promos" | "blog" | "settings">("products");
+  const router = useRouter();
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
+  const [activeTab, setActiveTab] = useState<"products" | "coffrets" | "orders" | "promos" | "blog" | "settings">("orders");
   
   // Manage entities in state/localstorage
   const [products, setProducts] = useState<Product[]>([]);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [promoCodes, setPromoCodes] = useState<{ code: string; discount: number; minAmount: number }[]>([]);
-  const [orders, setOrders] = useState<{ id: string; name: string; total: number; status: string; date: string }[]>([]);
+  const [orders, setOrders] = useState<any[]>([]);
+  const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = useState(false);
+  const [editingOrder, setEditingOrder] = useState<any | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [settings, setSettings] = useState({
     whatsapp: "+212 716 01 41 48",
     email: "naturomiel@gmail.com",
     freeShippingThreshold: "75",
     standardShippingFee: "9.9",
   });
+
+  // Verify Admin Session
+  useEffect(() => {
+    fetch("/api/admin/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.authenticated) {
+          router.replace("/admin/login");
+        } else {
+          setIsAuthChecking(false);
+        }
+      })
+      .catch(() => {
+        router.replace("/admin/login");
+      });
+  }, [router]);
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/logout", { method: "POST" });
+    } finally {
+      router.replace("/admin/login");
+    }
+  };
 
   // Load from database mock or localstorage on mount
   useEffect(() => {
@@ -49,13 +82,72 @@ export default function AdminPage() {
       ]);
     }
 
-    // Load orders
-    setOrders([
+    // Load orders from API if available or mock
+    const defaultOrders = [
       { id: "NM-492810", name: "Sarah K.", total: 50.00, status: "PAID", date: "27/06/2026" },
       { id: "NM-394812", name: "Ahmed B.", total: 112.50, status: "PENDING", date: "26/06/2026" },
       { id: "NM-821903", name: "Mireille D.", total: 25.00, status: "DELIVERED", date: "24/06/2026" },
-    ]);
+    ];
+    fetch("/api/admin/orders/preorder")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((dbOrders) => {
+        if (Array.isArray(dbOrders) && dbOrders.length > 0) {
+          setOrders([...dbOrders, ...defaultOrders]);
+        } else {
+          setOrders(defaultOrders);
+        }
+      })
+      .catch(() => setOrders(defaultOrders));
   }, []);
+
+  const handleDeleteOrder = async (orderId: string) => {
+    if (!confirm("Voulez-vous vraiment supprimer cette commande ?")) return;
+
+    try {
+      const res = await fetch(`/api/admin/orders/preorder?id=${orderId}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setOrders((prev) => prev.filter((o) => o.id !== orderId && o.orderNumber !== orderId));
+      } else {
+        // Fallback local
+        setOrders((prev) => prev.filter((o) => o.id !== orderId && o.orderNumber !== orderId));
+      }
+    } catch {
+      setOrders((prev) => prev.filter((o) => o.id !== orderId && o.orderNumber !== orderId));
+    }
+  };
+
+  const handleUpdateOrder = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingOrder) return;
+
+    try {
+      const res = await fetch("/api/admin/orders/preorder", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editingOrder),
+      });
+      const data = await res.json();
+      if (res.ok && data.order) {
+        setOrders((prev) =>
+          prev.map((o) => (o.id === editingOrder.id || o.orderNumber === editingOrder.orderNumber ? data.order : o))
+        );
+      } else {
+        // Fallback local
+        setOrders((prev) =>
+          prev.map((o) => (o.id === editingOrder.id || o.orderNumber === editingOrder.orderNumber ? editingOrder : o))
+        );
+      }
+    } catch {
+      setOrders((prev) =>
+        prev.map((o) => (o.id === editingOrder.id || o.orderNumber === editingOrder.orderNumber ? editingOrder : o))
+      );
+    }
+
+    setIsEditModalOpen(false);
+    setEditingOrder(null);
+  };
 
   const saveProducts = (newProducts: Product[]) => {
     setProducts(newProducts);
@@ -118,6 +210,15 @@ export default function AdminPage() {
     alert("Configurations enregistrées avec succès !");
   };
 
+  if (isAuthChecking) {
+    return (
+      <div className="min-h-screen bg-[#fffaf2] flex flex-col items-center justify-center space-y-4">
+        <RefreshCw className="w-8 h-8 text-[#223b30] animate-spin" />
+        <p className="text-sm font-semibold text-[#223b30]">Vérification de session...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-bg-cream">
       {/* Admin header */}
@@ -125,9 +226,17 @@ export default function AdminPage() {
         <Link href="/" className="font-serif text-xl tracking-widest font-bold">
           NATURO<span className="text-gold-champagne">MIEL</span> <span className="text-xs uppercase bg-gold-dark text-dark-deep px-2 py-0.5 ml-2 font-sans font-bold">Back-office</span>
         </Link>
-        <Link href="/" className="text-xs text-gold-champagne border border-gold-champagne/30 px-3 py-1 hover:bg-gold-champagne/15 transition-colors">
-          Aller sur le site
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link href="/" className="text-xs text-gold-champagne border border-gold-champagne/30 px-3 py-1 hover:bg-gold-champagne/15 transition-colors">
+            Aller sur le site
+          </Link>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-1.5 text-xs text-red-300 hover:text-white bg-red-900/40 hover:bg-red-800/80 border border-red-500/30 px-3 py-1 rounded transition-colors"
+          >
+            <LogOut className="w-3.5 h-3.5" /> Déconnexion
+          </button>
+        </div>
       </header>
 
       <div className="flex flex-1 flex-col md:flex-row max-w-7xl w-full mx-auto p-4 sm:p-8 gap-8">
@@ -148,6 +257,14 @@ export default function AdminPage() {
             }`}
           >
             <ShoppingCart className="h-4 w-4" /> Commandes
+          </button>
+          <button
+            onClick={() => setActiveTab("coffrets")}
+            className={`flex items-center gap-3 px-4 py-3 text-xs font-semibold uppercase tracking-wider w-full text-left transition-colors ${
+              activeTab === "coffrets" ? "bg-dark-deep text-white" : "text-dark-soft hover:bg-bg-cream"
+            }`}
+          >
+            <Box className="h-4 w-4 text-emerald-400" /> Coffret 5 Pots & Tournée
           </button>
           <button
             onClick={() => setActiveTab("promos")}
@@ -234,9 +351,43 @@ export default function AdminPage() {
           {/* Orders Panel */}
           {activeTab === "orders" && (
             <div className="space-y-6">
-              <div>
-                <h2 className="font-serif text-2xl text-dark-deep">Suivi des Commandes</h2>
-                <p className="text-xs text-olive-light">Consultez l'historique et mettez à jour l'état de livraison.</p>
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                  <h2 className="font-serif text-2xl text-dark-deep">Suivi des Commandes & Précommandes</h2>
+                  <p className="text-xs text-olive-light">Consultez l'historique, importez les messages WhatsApp et gérez la tournée.</p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  {/* Menu Impression Globale */}
+                  <div className="flex items-center bg-white border border-gray-300 rounded-xs shadow-2xs">
+                    <button
+                      onClick={() => printGlobalPreparationSheet(orders, "city")}
+                      className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-dark-deep hover:bg-bg-cream flex items-center gap-1.5 transition-colors cursor-pointer"
+                      title="Imprimer le manifeste global de préparation"
+                    >
+                      <FileText className="w-4 h-4 text-amber-700" />
+                      Fiche Préparation Globale
+                    </button>
+                    <select
+                      onChange={(e) => printGlobalPreparationSheet(orders, e.target.value as any)}
+                      defaultValue=""
+                      className="text-[11px] border-l border-gray-300 bg-gray-50 py-2 px-2 text-gray-700 focus:outline-hidden cursor-pointer"
+                      title="Changer le tri de la fiche globale"
+                    >
+                      <option value="" disabled>Trier par...</option>
+                      <option value="city">Par Ville</option>
+                      <option value="name">Par Nom Client</option>
+                      <option value="phone">Par Téléphone</option>
+                    </select>
+                  </div>
+
+                  <button
+                    onClick={() => setIsWhatsAppModalOpen(true)}
+                    className="bg-emerald-800 hover:bg-emerald-900 text-white px-4 py-2 text-xs font-semibold uppercase tracking-wider flex items-center gap-2 shadow-2xs transition-colors cursor-pointer"
+                  >
+                    <MessageSquarePlus className="w-4 h-4 text-emerald-300" />
+                    + Importer WhatsApp
+                  </button>
+                </div>
               </div>
 
               <div className="overflow-x-auto">
@@ -244,48 +395,204 @@ export default function AdminPage() {
                   <thead>
                     <tr className="border-b border-gold-champagne/20 text-olive-dark font-bold">
                       <th className="py-3 px-2">Référence</th>
-                      <th className="py-3 px-2">Client</th>
-                      <th className="py-3 px-2">Date</th>
+                      <th className="py-3 px-2">Client / Contact</th>
+                      <th className="py-3 px-2">Destination / Étape</th>
                       <th className="py-3 px-2">Montant</th>
                       <th className="py-3 px-2">Statut</th>
+                      <th className="py-3 px-2">Date / Absence</th>
                       <th className="py-3 px-2 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {orders.map((order) => (
                       <tr key={order.id} className="border-b border-gold-champagne/5 hover:bg-bg-cream/20">
-                        <td className="py-3 px-2 font-mono font-bold text-dark-deep">{order.id}</td>
-                        <td className="py-3 px-2 font-medium">{order.name}</td>
-                        <td className="py-3 px-2 text-olive-light">{order.date}</td>
-                        <td className="py-3 px-2 font-semibold text-dark-soft">{order.total} €</td>
+                        <td className="py-3 px-2 font-mono font-bold text-dark-deep">
+                          {order.orderNumber || order.id}
+                        </td>
+                        <td className="py-3 px-2">
+                          <div className="font-medium text-dark-deep">{order.customerName || order.name}</div>
+                          {order.phone && <div className="text-[10px] text-gray-500 font-mono">{order.phone}</div>}
+                        </td>
+                        <td className="py-3 px-2">
+                          <div className="font-medium">{order.city || order.shippingAddress?.slice(0, 25) || "-"}</div>
+                          {order.highwayStep && (
+                            <div className="text-[10px] text-emerald-700 font-semibold">{order.highwayStep}</div>
+                          )}
+                        </td>
+                        <td className="py-3 px-2 font-semibold text-dark-soft">
+                          {order.totalAmount || order.total} €
+                        </td>
                         <td className="py-3 px-2">
                           <span className={`px-2 py-0.5 font-semibold text-[10px] ${
                             order.status === "PAID" 
                               ? "bg-emerald-50 text-emerald-800 border border-emerald-350" 
                               : order.status === "DELIVERED"
                               ? "bg-blue-50 text-blue-800"
+                              : order.status === "PREORDER_PENDING"
+                              ? "bg-purple-50 text-purple-800 border border-purple-200"
                               : "bg-amber-50 text-amber-800"
                           }`}>
                             {order.status}
                           </span>
                         </td>
+                        <td className="py-3 px-2 text-olive-light">
+                          <div>{order.date || new Date(order.createdAt || Date.now()).toLocaleDateString("fr-FR")}</div>
+                          {order.absenceWindow && (
+                            <div className="text-[10px] text-amber-700 font-semibold">{order.absenceWindow}</div>
+                          )}
+                        </td>
                         <td className="py-3 px-2 text-right">
-                          <button
-                            onClick={() => {
-                              const updated = orders.map((o) =>
-                                o.id === order.id ? { ...o, status: "DELIVERED" } : o
-                              );
-                              setOrders(updated);
-                            }}
-                            className="bg-dark-deep hover:bg-gold-dark text-white px-2 py-1 text-[9px] font-semibold uppercase tracking-wider transition-colors"
-                          >
-                            Livrer
-                          </button>
+                          <div className="flex items-center justify-end gap-1.5">
+                            {/* Bouton Impression Bon Individuel */}
+                            <button
+                              onClick={() => printIndividualOrder(order)}
+                              title="Imprimer le bon de commande individuel (PDF)"
+                              className="p-1 text-amber-800 hover:text-amber-950 hover:bg-amber-50 rounded-xs transition-colors cursor-pointer"
+                            >
+                              <Printer className="w-3.5 h-3.5" />
+                            </button>
+
+                            {order.status !== "DELIVERED" && (
+                              <button
+                                onClick={() => {
+                                  const updated = orders.map((o) =>
+                                    o.id === order.id || o.orderNumber === order.orderNumber ? { ...o, status: "DELIVERED" } : o
+                                  );
+                                  setOrders(updated);
+                                }}
+                                title="Marquer comme livré"
+                                className="bg-dark-deep hover:bg-gold-dark text-white px-2 py-1 text-[9px] font-semibold uppercase tracking-wider transition-colors cursor-pointer"
+                              >
+                                Livrer
+                              </button>
+                            )}
+                            <button
+                              onClick={() => {
+                                setEditingOrder({ ...order });
+                                setIsEditModalOpen(true);
+                              }}
+                              title="Modifier la commande"
+                              className="p-1 text-gray-600 hover:text-emerald-700 hover:bg-gray-100 rounded-xs transition-colors cursor-pointer"
+                            >
+                              <Edit3 className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteOrder(order.id || order.orderNumber)}
+                              title="Supprimer la commande"
+                              className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xs transition-colors cursor-pointer"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
+              </div>
+            </div>
+          )}
+
+          {/* Coffrets 5 Pots & Tournée Panel */}
+          {activeTab === "coffrets" && (
+            <div className="space-y-8">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-emerald-950 text-white p-6 border border-gold-champagne/30">
+                <div>
+                  <span className="text-[10px] uppercase tracking-widest text-gold-champagne font-bold">Catalogue Dédié</span>
+                  <h2 className="font-serif text-2xl text-white">Offre Coffret 5 Pots & Tournée A63/A10</h2>
+                  <p className="text-xs text-gray-300 mt-1">
+                    Les 13 références officielles de la landing page avec décompte des stocks et gestion de l'axe logistique.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setIsWhatsAppModalOpen(true)}
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 text-xs font-semibold uppercase tracking-wider flex items-center gap-2 shadow-sm transition-colors cursor-pointer shrink-0"
+                >
+                  <MessageSquarePlus className="w-4 h-4" />
+                  + Importer commande WhatsApp
+                </button>
+              </div>
+
+              {/* Tournée Itinerary Reminder */}
+              <div className="p-4 bg-bg-cream/40 border border-gold-champagne/20">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-dark-deep flex items-center gap-2 mb-2">
+                  <Truck className="w-4 h-4 text-gold-dark" /> Axe Logistique Tournée A63 / A10
+                </h3>
+                <div className="flex flex-wrap gap-1.5">
+                  {TOURNEE_AXE_STEPS.map((step, idx) => (
+                    <span
+                      key={idx}
+                      className="text-[10px] bg-white border border-gray-200 px-2.5 py-1 text-dark-soft font-medium flex items-center gap-1"
+                    >
+                      <span className="text-gold-dark font-bold">{idx + 1}.</span> {step}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Products list & real carton stocks */}
+              <div>
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="font-serif text-lg text-dark-deep font-semibold">
+                    Inventaire Réel — Cartons de 12 pots & Pots Disponibles
+                  </h3>
+                  <span className="text-xs bg-emerald-100 text-emerald-900 px-3 py-1 font-semibold rounded-full">
+                    Total : 13 cartons (156 pots)
+                  </span>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs text-left border-collapse bg-white border border-gold-champagne/15">
+                    <thead>
+                      <tr className="border-b border-gold-champagne/20 bg-bg-cream/30 text-olive-dark font-bold">
+                        <th className="py-3 px-3">Réf.</th>
+                        <th className="py-3 px-3">Variété</th>
+                        <th className="py-3 px-3">Format</th>
+                        <th className="py-3 px-3 text-center">Cartons (12 pots)</th>
+                        <th className="py-3 px-3 text-center">Stock Pots Unitaire</th>
+                        <th className="py-3 px-3">Règle Tarifaire</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {OFFRE_PRODUCTS.map((prod) => (
+                        <tr key={prod.id} className="border-b border-gold-champagne/5 hover:bg-bg-cream/20">
+                          <td className="py-3 px-3 font-mono font-bold text-dark-deep">{prod.id}</td>
+                          <td className="py-3 px-3 font-medium text-dark-deep flex items-center gap-2">
+                            <span>{prod.name}</span>
+                            {prod.isSpecial && (
+                              <span className="text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 font-bold uppercase rounded-xs">
+                                +{prod.extra} € coffret
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-3 px-3 font-semibold text-dark-soft">{prod.weight}</td>
+                          <td className="py-3 px-3 text-center font-bold text-dark-deep">
+                            <span className="px-2 py-1 bg-amber-50 border border-amber-200 rounded-sm">
+                              {prod.cartonsStock} carton{prod.cartonsStock > 1 ? "s" : ""}
+                            </span>
+                          </td>
+                          <td className="py-3 px-3 text-center font-bold">
+                            <span className={`px-2.5 py-1 rounded-sm text-xs ${
+                              prod.potsStock > 15 
+                                ? "bg-emerald-100 text-emerald-900" 
+                                : "bg-blue-50 text-blue-900"
+                            }`}>
+                              {prod.potsStock} pots
+                            </span>
+                          </td>
+                          <td className="py-3 px-3 font-mono text-[11px]">
+                            {prod.id === "royal" ? (
+                              <span className="text-purple-700 font-semibold">+10 € en coffret / 25 € unité</span>
+                            ) : prod.extra ? (
+                              <span className="text-amber-700 font-semibold">+5 € par coffret</span>
+                            ) : (
+                              <span className="text-emerald-700 font-semibold">Inclus dans 50 €</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           )}
@@ -437,6 +744,160 @@ export default function AdminPage() {
 
         </main>
       </div>
+
+      {/* Modale d'importation WhatsApp & Décompte des stocks */}
+      <WhatsAppOrderModal
+        isOpen={isWhatsAppModalOpen}
+        onClose={() => setIsWhatsAppModalOpen(false)}
+        onOrderCreated={(newOrder) => {
+          setOrders((prev) => [newOrder, ...prev]);
+        }}
+      />
+
+      {/* Modale de Modification de Commande */}
+      {isEditModalOpen && editingOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white border border-gold-champagne/30 w-full max-w-xl p-6 sm:p-8 shadow-2xl relative">
+            <div className="flex items-center justify-between pb-4 border-b border-gold-champagne/20">
+              <div>
+                <h3 className="text-lg font-serif font-bold text-dark-deep">
+                  Modifier la commande {editingOrder.orderNumber || editingOrder.id}
+                </h3>
+                <p className="text-xs text-olive-dark">Mettez à jour les coordonnées, la livraison ou le statut.</p>
+              </div>
+              <button
+                onClick={() => {
+                  setIsEditModalOpen(false);
+                  setEditingOrder(null);
+                }}
+                className="p-1 hover:bg-gray-100 rounded-full text-gray-500 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateOrder} className="mt-4 space-y-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Nom Client</label>
+                  <input
+                    type="text"
+                    value={editingOrder.customerName || editingOrder.name || ""}
+                    onChange={(e) =>
+                      setEditingOrder({ ...editingOrder, customerName: e.target.value, name: e.target.value })
+                    }
+                    className="w-full border border-gray-300 p-2 font-medium"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Téléphone / WhatsApp</label>
+                  <input
+                    type="text"
+                    value={editingOrder.phone || ""}
+                    onChange={(e) => setEditingOrder({ ...editingOrder, phone: e.target.value })}
+                    className="w-full border border-gray-300 p-2 font-mono"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Adresse de livraison</label>
+                  <input
+                    type="text"
+                    value={editingOrder.shippingAddress || ""}
+                    onChange={(e) => setEditingOrder({ ...editingOrder, shippingAddress: e.target.value })}
+                    className="w-full border border-gray-300 p-2"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Ville / Commune</label>
+                  <input
+                    type="text"
+                    value={editingOrder.city || ""}
+                    onChange={(e) => setEditingOrder({ ...editingOrder, city: e.target.value })}
+                    className="w-full border border-gray-300 p-2"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Étape A63 / A10</label>
+                  <input
+                    type="text"
+                    value={editingOrder.highwayStep || ""}
+                    onChange={(e) => setEditingOrder({ ...editingOrder, highwayStep: e.target.value })}
+                    className="w-full border border-gray-300 p-2 text-emerald-800 font-semibold"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Créneau d'absence</label>
+                  <input
+                    type="text"
+                    value={editingOrder.absenceWindow || ""}
+                    placeholder="ex: Absent du 14/10 au 23/10"
+                    onChange={(e) => setEditingOrder({ ...editingOrder, absenceWindow: e.target.value })}
+                    className="w-full border border-gray-300 p-2 text-amber-800"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Montant Total (€)</label>
+                  <input
+                    type="number"
+                    step="0.5"
+                    value={editingOrder.totalAmount || editingOrder.total || 0}
+                    onChange={(e) =>
+                      setEditingOrder({
+                        ...editingOrder,
+                        totalAmount: parseFloat(e.target.value) || 0,
+                        total: parseFloat(e.target.value) || 0,
+                      })
+                    }
+                    className="w-full border border-gray-300 p-2 font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Statut</label>
+                  <select
+                    value={editingOrder.status}
+                    onChange={(e) => setEditingOrder({ ...editingOrder, status: e.target.value })}
+                    className="w-full border border-gray-300 p-2 font-semibold"
+                  >
+                    <option value="PREORDER_PENDING">PREORDER_PENDING</option>
+                    <option value="PENDING">PENDING</option>
+                    <option value="PAID">PAID</option>
+                    <option value="DELIVERED">DELIVERED</option>
+                    <option value="REFUNDED">REFUNDED</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-4 border-t border-gray-200">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsEditModalOpen(false);
+                    setEditingOrder(null);
+                  }}
+                  className="px-4 py-2 border border-gray-300 text-gray-700 hover:bg-gray-100 font-semibold uppercase tracking-wider text-[11px] cursor-pointer"
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  className="bg-dark-deep hover:bg-gold-dark text-white px-5 py-2 font-semibold uppercase tracking-wider text-[11px] flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Check className="w-3.5 h-3.5" /> Enregistrer les modifications
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

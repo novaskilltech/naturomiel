@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
 const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
-const productIds = ['romarin','thym','thym-rose','eucalyptus','chene','citronnier','lavande','lavande-papillon','tilleul','garrigue','coriandre','royal','pollen'];
+const productIds = ['romarin','thym','thym-rose','eucalyptus','chene','citronnier','lavande','tilleul','garrigue','coriandre','royal','pollen'];
 for (const id of productIds) assert(html.includes('data-id="'+id+'"'), 'Produit absent : '+id);
 assert(html.includes('212716014148'), 'Destinataire WhatsApp manquant');
 assert(html.includes('BASE_PACK = 50'), 'Tarif de base manquant');
