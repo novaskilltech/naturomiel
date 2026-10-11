@@ -390,6 +390,60 @@ export default function AdminPage() {
                 </div>
               </div>
 
+              {/* Quick Real Time Stock Banner on Coffret Orders */}
+              {(() => {
+                const stockSummary = computeRealTimeStock(orders);
+                return (
+                  <div className="bg-white border border-gold-champagne/20 p-4 shadow-2xs space-y-3">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-gray-100 pb-2">
+                      <div className="flex items-center gap-2">
+                        <Box className="w-4 h-4 text-emerald-700" />
+                        <span className="text-xs font-bold uppercase tracking-wider text-dark-deep">
+                          État du Stock Réel — Offre Coffret 5 Pots (13 cartons au départ)
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-3 text-xs">
+                        <span className="text-amber-800 font-bold bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
+                          {stockSummary.totalConsumedPots} pots commandés
+                        </span>
+                        <span className="text-emerald-800 font-bold bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-300">
+                          {stockSummary.totalRemainingPots} / {stockSummary.totalInitialPots} pots restants
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Mini pills of remaining stock per honey */}
+                    <div className="flex flex-wrap gap-1.5">
+                      {stockSummary.productsStock.map((prod) => (
+                        <div
+                          key={prod.id}
+                          className={`text-[11px] px-2.5 py-1 border flex items-center gap-1.5 rounded-xs ${
+                            prod.status === "OUT_OF_STOCK"
+                              ? "bg-red-50 text-red-900 border-red-300 font-bold"
+                              : prod.status === "LOW_STOCK"
+                              ? "bg-amber-50 text-amber-900 border-amber-300 font-bold"
+                              : "bg-gray-50 text-dark-deep border-gray-200"
+                          }`}
+                        >
+                          <span className="font-medium">{prod.name.replace("Miel de ", "").replace("Miel à la ", "").replace("Miellat de ", "")}:</span>
+                          <span
+                            className={`px-1.5 py-0.2 rounded-xs font-bold ${
+                              prod.status === "OUT_OF_STOCK"
+                                ? "bg-red-600 text-white"
+                                : prod.status === "LOW_STOCK"
+                                ? "bg-amber-500 text-white"
+                                : "bg-emerald-100 text-emerald-900"
+                            }`}
+                          >
+                            {prod.remainingPots}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
+
               <div className="overflow-x-auto">
                 <table className="w-full text-xs text-left border-collapse">
                   <thead>
