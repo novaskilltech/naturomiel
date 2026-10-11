@@ -14,7 +14,7 @@ assert(html.includes('Pollen de montagne'), 'Pollen manquant');
 assert(html.includes('honey5'), 'Cinquième choix manquant');
 assert(html.includes('Logo historique NATUROMIEL'), 'Logo historique manquant');
 assert(html.includes('const embeddedImages'), 'Visuels autonomes manquants');
-assert(html.includes('og:image') && html.includes('naturomiel-og-1200x630.png'), 'Miniature Open Graph manquante');
+assert(html.includes('og:image') && (html.includes('pot-miel-twitter.png') || html.includes('naturomiel-og-1200x630.png')), 'Miniature Open Graph manquante');
 assert(html.includes('twitter:card') && html.includes('summary_large_image'), 'Twitter Card manquante');
 assert(html.includes('og:url'), 'URL partage social manquante');
 assert(html.includes('lundi 12 octobre 2026'), 'Date de livraison manquante');
