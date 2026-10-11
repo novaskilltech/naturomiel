@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PRODUCTS as initialProducts, Product } from "@/lib/mockData";
 import { BLOG_POSTS as initialBlogPosts, BlogPost } from "@/lib/blogData";
-import { Package, ShoppingCart, Tag, BookOpen, Settings, Check, Save, Plus, Trash2, MessageSquarePlus, Box, Truck, Edit3, X, RefreshCw, Printer, FileText, LogOut } from "lucide-react";
+import { Package, ShoppingCart, Tag, BookOpen, Settings, Check, Save, Plus, Trash2, MessageSquarePlus, Box, Truck, Edit3, X, RefreshCw, Printer, FileText, LogOut, AlertTriangle, AlertCircle } from "lucide-react";
 import WhatsAppOrderModal from "@/components/WhatsAppOrderModal";
-import { OFFRE_PRODUCTS, TOURNEE_AXE_STEPS } from "@/lib/offreCatalog";
+import { OFFRE_PRODUCTS, TOURNEE_AXE_STEPS, computeRealTimeStock } from "@/lib/offreCatalog";
 import { printIndividualOrder, printGlobalPreparationSheet } from "@/lib/printOrders";
 
 export default function AdminPage() {
@@ -530,70 +530,211 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* Products list & real carton stocks */}
-              <div>
-                <div className="flex justify-between items-center mb-3">
-                  <h3 className="font-serif text-lg text-dark-deep font-semibold">
-                    Inventaire Réel — Cartons de 12 pots & Pots Disponibles
-                  </h3>
-                  <span className="text-xs bg-emerald-100 text-emerald-900 px-3 py-1 font-semibold rounded-full">
-                    Total : 13 cartons (156 pots)
-                  </span>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-xs text-left border-collapse bg-white border border-gold-champagne/15">
-                    <thead>
-                      <tr className="border-b border-gold-champagne/20 bg-bg-cream/30 text-olive-dark font-bold">
-                        <th className="py-3 px-3">Réf.</th>
-                        <th className="py-3 px-3">Variété</th>
-                        <th className="py-3 px-3">Format</th>
-                        <th className="py-3 px-3 text-center">Cartons (12 pots)</th>
-                        <th className="py-3 px-3 text-center">Stock Pots Unitaire</th>
-                        <th className="py-3 px-3">Règle Tarifaire</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {OFFRE_PRODUCTS.map((prod) => (
-                        <tr key={prod.id} className="border-b border-gold-champagne/5 hover:bg-bg-cream/20">
-                          <td className="py-3 px-3 font-mono font-bold text-dark-deep">{prod.id}</td>
-                          <td className="py-3 px-3 font-medium text-dark-deep flex items-center gap-2">
-                            <span>{prod.name}</span>
-                            {prod.isSpecial && (
-                              <span className="text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 font-bold uppercase rounded-xs">
-                                +{prod.extra} € coffret
-                              </span>
-                            )}
-                          </td>
-                          <td className="py-3 px-3 font-semibold text-dark-soft">{prod.weight}</td>
-                          <td className="py-3 px-3 text-center font-bold text-dark-deep">
-                            <span className="px-2 py-1 bg-amber-50 border border-amber-200 rounded-sm">
-                              {prod.cartonsStock} carton{prod.cartonsStock > 1 ? "s" : ""}
+              {/* Dynamic Stocks Computed from Orders */}
+              {(() => {
+                const stockSummary = computeRealTimeStock(orders);
+
+                return (
+                  <div className="space-y-6">
+                    {/* Alerte globale si ruptures ou stocks bas */}
+                    {(stockSummary.outOfStockCount > 0 || stockSummary.lowStockCount > 0) && (
+                      <div className="p-4 bg-amber-50 border-l-4 border-amber-500 text-amber-900 rounded-r-xs space-y-1">
+                        <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-wider">
+                          <AlertTriangle className="w-4 h-4 text-amber-600" />
+                          <span>Attention Ruptures & Stocks Critiques</span>
+                        </div>
+                        <p className="text-xs">
+                          {stockSummary.outOfStockCount > 0 && (
+                            <strong className="text-red-700">
+                              {stockSummary.outOfStockCount} variété(s) en RUPTURE TOTALE (0 pot restant).{" "}
+                            </strong>
+                          )}
+                          {stockSummary.lowStockCount > 0 && (
+                            <span className="text-amber-800">
+                              {stockSummary.lowStockCount} variété(s) avec un stock critique (&le; 3 pots).
                             </span>
-                          </td>
-                          <td className="py-3 px-3 text-center font-bold">
-                            <span className={`px-2.5 py-1 rounded-sm text-xs ${
-                              prod.potsStock > 15 
-                                ? "bg-emerald-100 text-emerald-900" 
-                                : "bg-blue-50 text-blue-900"
-                            }`}>
-                              {prod.potsStock} pots
-                            </span>
-                          </td>
-                          <td className="py-3 px-3 font-mono text-[11px]">
-                            {prod.id === "royal" ? (
-                              <span className="text-purple-700 font-semibold">+10 € en coffret / 25 € unité</span>
-                            ) : prod.extra ? (
-                              <span className="text-amber-700 font-semibold">+5 € par coffret</span>
-                            ) : (
-                              <span className="text-emerald-700 font-semibold">Inclus dans 50 €</span>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+                          )}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Synthèse globale en cartes */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                      <div className="bg-white p-4 border border-gold-champagne/20 shadow-2xs">
+                        <span className="text-[10px] text-gray-500 uppercase font-bold block">Stock Initial</span>
+                        <div className="text-xl font-serif font-bold text-dark-deep mt-1">
+                          {stockSummary.totalInitialPots} pots
+                        </div>
+                        <span className="text-[11px] text-olive-dark">
+                          {stockSummary.totalInitialCartons} cartons pleins
+                        </span>
+                      </div>
+
+                      <div className="bg-white p-4 border border-gold-champagne/20 shadow-2xs">
+                        <span className="text-[10px] text-gray-500 uppercase font-bold block">Pots Commandés</span>
+                        <div className="text-xl font-serif font-bold text-amber-700 mt-1">
+                          {stockSummary.totalConsumedPots} pots
+                        </div>
+                        <span className="text-[11px] text-gray-500">
+                          déduits sur {orders.length} commande(s)
+                        </span>
+                      </div>
+
+                      <div className="bg-white p-4 border border-gold-champagne/20 shadow-2xs">
+                        <span className="text-[10px] text-gray-500 uppercase font-bold block">Stock Réel Restant</span>
+                        <div className="text-xl font-serif font-bold text-emerald-800 mt-1">
+                          {stockSummary.totalRemainingPots} pots
+                        </div>
+                        <span className="text-[11px] text-emerald-700 font-semibold">
+                          {stockSummary.totalRemainingCartons} carton{stockSummary.totalRemainingCartons > 1 ? "s" : ""}
+                          {stockSummary.totalRemainingLoosePots > 0 ? ` + ${stockSummary.totalRemainingLoosePots} pots` : ""}
+                        </span>
+                      </div>
+
+                      <div className="bg-white p-4 border border-gold-champagne/20 shadow-2xs">
+                        <span className="text-[10px] text-gray-500 uppercase font-bold block">Taux d'Écoulement</span>
+                        <div className="text-xl font-serif font-bold text-blue-900 mt-1">
+                          {stockSummary.totalInitialPots > 0
+                            ? Math.round((stockSummary.totalConsumedPots / stockSummary.totalInitialPots) * 100)
+                            : 0} %
+                        </div>
+                        <span className="text-[11px] text-gray-500">
+                          de la tournée réservé
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Products list & real carton stocks */}
+                    <div>
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3">
+                        <div>
+                          <h3 className="font-serif text-lg text-dark-deep font-semibold">
+                            Inventaire Réel Dynamique & Décompte des Stocks
+                          </h3>
+                          <p className="text-xs text-olive-dark">
+                            Chaque commande enregistrée soustrait automatiquement les pots commandés du stock.
+                          </p>
+                        </div>
+                        <span className="text-xs bg-emerald-100 text-emerald-900 px-3 py-1 font-semibold rounded-full">
+                          Reste : {stockSummary.totalRemainingPots} / {stockSummary.totalInitialPots} pots
+                        </span>
+                      </div>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-xs text-left border-collapse bg-white border border-gold-champagne/15">
+                          <thead>
+                            <tr className="border-b border-gold-champagne/20 bg-bg-cream/30 text-olive-dark font-bold">
+                              <th className="py-3 px-3">Réf.</th>
+                              <th className="py-3 px-3">Variété</th>
+                              <th className="py-3 px-3">Format</th>
+                              <th className="py-3 px-3 text-center">Stock Initial</th>
+                              <th className="py-3 px-3 text-center">Commandés</th>
+                              <th className="py-3 px-3 text-center bg-amber-50/50">Stock Restant Réel</th>
+                              <th className="py-3 px-3 text-center">Équiv. Cartons</th>
+                              <th className="py-3 px-3 text-center">Disponibilité</th>
+                              <th className="py-3 px-3">Tarif / Coffret</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {stockSummary.productsStock.map((prod) => (
+                              <tr
+                                key={prod.id}
+                                className={`border-b border-gold-champagne/5 hover:bg-bg-cream/20 ${
+                                  prod.status === "OUT_OF_STOCK"
+                                    ? "bg-red-50/40"
+                                    : prod.status === "LOW_STOCK"
+                                    ? "bg-amber-50/30"
+                                    : ""
+                                }`}
+                              >
+                                <td className="py-3 px-3 font-mono font-bold text-dark-deep">{prod.id}</td>
+                                <td className="py-3 px-3 font-medium text-dark-deep">
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-semibold">{prod.name}</span>
+                                    {prod.isSpecial && (
+                                      <span className="text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 font-bold uppercase rounded-xs">
+                                        +{prod.extra} €
+                                      </span>
+                                    )}
+                                  </div>
+                                </td>
+                                <td className="py-3 px-3 font-semibold text-dark-soft">{prod.weight}</td>
+                                <td className="py-3 px-3 text-center text-gray-600">
+                                  {prod.potsStock} pots ({prod.cartonsStock} ctn)
+                                </td>
+                                <td className="py-3 px-3 text-center font-bold">
+                                  {prod.consumedPots > 0 ? (
+                                    <span className="text-amber-800 font-bold bg-amber-100 px-2 py-0.5 rounded-full">
+                                      -{prod.consumedPots} pot{prod.consumedPots > 1 ? "s" : ""}
+                                    </span>
+                                  ) : (
+                                    <span className="text-gray-400">0</span>
+                                  )}
+                                </td>
+                                <td className="py-3 px-3 text-center font-bold bg-amber-50/40">
+                                  <span
+                                    className={`px-3 py-1 rounded-sm text-xs font-bold inline-block min-w-16 ${
+                                      prod.status === "OUT_OF_STOCK"
+                                        ? "bg-red-600 text-white shadow-2xs"
+                                        : prod.status === "LOW_STOCK"
+                                        ? "bg-amber-500 text-white"
+                                        : "bg-emerald-100 text-emerald-900 border border-emerald-300"
+                                    }`}
+                                  >
+                                    {prod.remainingPots} pot{prod.remainingPots > 1 ? "s" : ""}
+                                  </span>
+                                </td>
+                                <td className="py-3 px-3 text-center text-gray-700 font-mono text-[11px]">
+                                  {prod.remainingCartons > 0 && (
+                                    <span>
+                                      {prod.remainingCartons} ctn{prod.remainingCartons > 1 ? "s" : ""}
+                                    </span>
+                                  )}
+                                  {prod.remainingLoosePots > 0 && (
+                                    <span className="text-gray-500">
+                                      {prod.remainingCartons > 0 ? " + " : ""}
+                                      {prod.remainingLoosePots} pot{prod.remainingLoosePots > 1 ? "s" : ""}
+                                    </span>
+                                  )}
+                                  {prod.remainingPots === 0 && (
+                                    <span className="text-red-500 font-bold">Épuisé</span>
+                                  )}
+                                </td>
+                                <td className="py-3 px-3 text-center">
+                                  {prod.status === "OUT_OF_STOCK" ? (
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase bg-red-100 text-red-800 px-2 py-0.5 rounded-full">
+                                      <AlertCircle className="w-3 h-3 text-red-600" />
+                                      Rupture
+                                    </span>
+                                  ) : prod.status === "LOW_STOCK" ? (
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full">
+                                      <AlertTriangle className="w-3 h-3 text-amber-700" />
+                                      Critique
+                                    </span>
+                                  ) : (
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
+                                      <Check className="w-3 h-3 text-emerald-600" />
+                                      En stock
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="py-3 px-3 font-mono text-[11px]">
+                                  {prod.id === "royal" ? (
+                                    <span className="text-purple-700 font-semibold">+10 € en coffret</span>
+                                  ) : prod.extra ? (
+                                    <span className="text-amber-700 font-semibold">+5 € par coffret</span>
+                                  ) : (
+                                    <span className="text-emerald-700 font-semibold">Inclus dans 50 €</span>
+                                  )}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           )}
 
