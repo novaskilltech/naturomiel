@@ -82,22 +82,17 @@ export default function AdminPage() {
       ]);
     }
 
-    // Load orders from API if available or mock
-    const defaultOrders = [
-      { id: "NM-492810", name: "Sarah K.", total: 50.00, status: "PAID", date: "27/06/2026" },
-      { id: "NM-394812", name: "Ahmed B.", total: 112.50, status: "PENDING", date: "26/06/2026" },
-      { id: "NM-821903", name: "Mireille D.", total: 25.00, status: "DELIVERED", date: "24/06/2026" },
-    ];
+    // Load orders strictly from API / Supabase
     fetch("/api/admin/orders/preorder")
       .then((res) => (res.ok ? res.json() : []))
       .then((dbOrders) => {
-        if (Array.isArray(dbOrders) && dbOrders.length > 0) {
-          setOrders([...dbOrders, ...defaultOrders]);
+        if (Array.isArray(dbOrders)) {
+          setOrders(dbOrders);
         } else {
-          setOrders(defaultOrders);
+          setOrders([]);
         }
       })
-      .catch(() => setOrders(defaultOrders));
+      .catch(() => setOrders([]));
   }, []);
 
   const handleDeleteOrder = async (orderId: string) => {
