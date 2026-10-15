@@ -19,6 +19,7 @@ assert(html.includes('twitter:card') && html.includes('summary_large_image'), 'T
 assert(html.includes('og:url'), 'URL partage social manquante');
 assert(html.includes('dimanche 18 octobre 2026'), 'Date de livraison manquante');
 assert(html.includes('Mondial Relay'), 'Option Mondial Relay manquante');
+assert(html.includes('Creil'), 'Point de départ Creil manquant');
 assert(html.includes('orderForOther') && html.includes('recipientName') && html.includes('recipientPhone'), 'Livraison pour autrui manquante');
 assert(html.includes('Carte bancaire (lien Stripe sur demande)'), 'Paiement par carte Stripe manquant');
 assert(!html.includes('Il n’est plus offert') && !html.includes('(non offert)'), 'Ancien texte pollen offert toujours présent');
