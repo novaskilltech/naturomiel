@@ -114,8 +114,14 @@ export function parseWhatsAppOrder(text: string): ParsedWhatsAppOrder {
     if (/^Destinataire\s*[:\-]\s*(.+)/i.test(l)) {
       result.delivery.recipient = l.match(/^Destinataire\s*[:\-]\s*(.+)/i)![1].trim();
     }
-    if (/^Adresse\s*(?:de\s*livraison)?\s*[:\-]\s*(.+)/i.test(l)) {
-      result.delivery.address = l.match(/^Adresse\s*(?:de\s*livraison)?\s*[:\-]\s*(.+)/i)![1].trim();
+    if (/^Mode\s*[:\-]\s*(.+)/i.test(l)) {
+      const mode = l.match(/^Mode\s*[:\-]\s*(.+)/i)![1].trim();
+      if (/Mondial\s*Relay/i.test(mode)) {
+        result.delivery.highwayStep = "Mondial Relay (France entière)";
+      }
+    }
+    if (/^Adresse\s*(?:\/\s*Point\s*Relais)?(?:\s*de\s*livraison)?\s*[:\-]\s*(.+)/i.test(l)) {
+      result.delivery.address = l.match(/^Adresse\s*(?:\/\s*Point\s*Relais)?(?:\s*de\s*livraison)?\s*[:\-]\s*(.+)/i)![1].trim();
     }
     if (/^Code\s*postal\s*\/?\s*ville(?:\s*de\s*livraison)?\s*[:\-]\s*(.+)/i.test(l)) {
       const cpVille = l.match(/^Code\s*postal\s*\/?\s*ville(?:\s*de\s*livraison)?\s*[:\-]\s*(.+)/i)![1].trim();
@@ -127,8 +133,8 @@ export function parseWhatsAppOrder(text: string): ParsedWhatsAppOrder {
         result.delivery.city = cpVille;
       }
     }
-    if (/^Étape\s*(?:A63\/A10)?\s*(?:la\s*plus\s*proche)?\s*[:\-]\s*(.+)/i.test(l)) {
-      result.delivery.highwayStep = l.match(/^Étape\s*(?:A63\/A10)?\s*(?:la\s*plus\s*proche)?\s*[:\-]\s*(.+)/i)![1].trim();
+    if (/^Étape\s*(?:\/\s*Option)?(?:\s*A63\/A10)?\s*(?:la\s*plus\s*proche)?\s*[:\-]\s*(.+)/i.test(l)) {
+      result.delivery.highwayStep = l.match(/^Étape\s*(?:\/\s*Option)?(?:\s*A63\/A10)?\s*(?:la\s*plus\s*proche)?\s*[:\-]\s*(.+)/i)![1].trim();
     }
     if (/^Informations\s*utiles\s*[:\-]\s*(.+)/i.test(l)) {
       const info = l.match(/^Informations\s*utiles\s*[:\-]\s*(.+)/i)![1].trim();
